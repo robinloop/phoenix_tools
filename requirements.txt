@@ -1,0 +1,8 @@
+numpy==1.16.2
+pandas==0.24.2
+pyecharts==0.5.11
+pyecharts-javascripthon==0.0.6
+pyecharts-jupyter-installer==0.0.3
+pyecharts-snapshot==0.1.10
+requests==2.21.0
+scipy==1.2.1
