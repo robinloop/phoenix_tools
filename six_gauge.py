@@ -16,8 +16,8 @@ def generate_chart(date, data):
     gauge = Gauge("指数温度", width=900, height=600)
     option = gauge._option
     option['title'] = {
-        "text": date,
-        "left": "39%",
+        "text": "公众号：金凤钱潮策略 " + date,
+        "left": "15%",
         "top": "7%"
         }
     option['tooltip'] = {
@@ -27,22 +27,22 @@ def generate_chart(date, data):
         "show": False
     }
     option["graphic"] = [
-        # {
-        #     "type": "image",
-        #     "id": "logo",
-        #     "right": 675,
-        #     "top": 20,
-        #     "z": 10,
-        #     "bounding": "raw",
-        #     "draggable": True,
-        #     "origin": [75, 75],
-        #     "style": {
-        #             "image": "image/logo.jpg",
-        #             "width": 50,
-        #             "height": 50,
-        #             "opacity": 1
-        #         }
-        # },
+        {
+            "type": "image",
+            "id": "logo",
+            "right": 255,
+            "top": 20,
+            "z": 10,
+            "bounding": "raw",
+            "draggable": True,
+            "origin": [75, 75],
+            "style": {
+                    "image": "image/logo.jpg",
+                    "width": 50,
+                    "height": 50,
+                    "opacity": 1
+                }
+        },
         {
             "type": "image",
             "id": "barcode",
