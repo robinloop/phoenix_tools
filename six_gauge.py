@@ -30,7 +30,7 @@ def generate_chart(date, data):
         {
             "type": "image",
             "id": "logo",
-            "right": 255,
+            "right": 205,
             "top": 20,
             "z": 10,
             "bounding": "raw",
@@ -38,8 +38,8 @@ def generate_chart(date, data):
             "origin": [75, 75],
             "style": {
                     "image": "image/logo.jpg",
-                    "width": 50,
-                    "height": 50,
+                    "width": 90,
+                    "height": 90,
                     "opacity": 1
                 }
         },
