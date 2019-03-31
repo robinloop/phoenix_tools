@@ -173,4 +173,4 @@ def option_process(names, x_axis, y_axises, y_axises2):
     return option
 
 
-generate()
+# generate()
