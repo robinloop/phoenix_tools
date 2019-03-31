@@ -19,7 +19,7 @@ def generate():
     y_axises2 = df["中证全指指数"]
 
     line = Line(width=1200)
-    option = option_process(names, dates, y_axises, y_axises2)
+    option = option_process(CHART_NAMES, dates, y_axises, y_axises2)
 
     # line.render('output/temp_line.html')
     # line._option = getOption()
@@ -173,4 +173,4 @@ def option_process(names, x_axis, y_axises, y_axises2):
     return option
 
 
-# generate()
+generate()
