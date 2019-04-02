@@ -25,7 +25,7 @@ if __name__ == '__main__':
                 if data is None or len(data) == 0:
                     print("没有获取到指定日期的指数温度，请输入正确的日期")
                 else:
-                    tg.generate(input_date, [round(i, 1) for i in data[1:7]], DEFAULT_HTML_TEMPERATURE)
+                    tg.generate(input_date, [round(i, 1) for i in data[1:9]], DEFAULT_HTML_TEMPERATURE)
                     print('chart生成完毕,请查看:', DEFAULT_HTML_TEMPERATURE)
     else:
         print('数据分析中，请稍后......')

@@ -26,7 +26,7 @@ def get_percentile_data(csv_file):
     #     p = stats.percentileofscore(a, a[0])
     #     result.append(round(p, 1))
     # return temp_pb[STOCK_NAMES[0]][0], result
-    return csvDate2lxrDate(result[0]), [round(i, 1) for i in result[1:7]]
+    return csvDate2lxrDate(result[0]), [round(i, 1) for i in result[1:9]]
 
 
 def data_process(csv_file):
@@ -79,6 +79,7 @@ def temp_history_process(temp_history, full_data, new_data):
 
 def get_new_data(start_date_fix):
     new_data = pd.DataFrame()
+    zzqz = []
     for index, stock_code in enumerate(stockCodes):
         result_data = download_data(stock_code, start_date_fix)
 
@@ -98,9 +99,12 @@ def get_new_data(start_date_fix):
             # 日期只需要插入一次即可
             new_data.insert(0, STOCK_NAMES[0], dates)
         new_data.insert(index + 1, STOCK_NAMES[index + 1], pbs)
+
         if stock_code == stockCodes[-1]:
             new_data.insert(index + 2, STOCK_NAMES[index + 2], pes)
-            new_data.insert(index + 3, STOCK_NAMES[index + 3], cps)
+        elif stock_code == stockCodes[2]:
+            zzqz = cps
+    new_data.insert(index + 3, STOCK_NAMES[index + 3], zzqz)
     return new_data
 
 
@@ -133,7 +137,7 @@ def check_today(start_date):
     d = datetime.datetime.strptime(start_date, '%Y-%m-%d')
     d2 = datetime.datetime.now()
     dd = d2 - d
-    if dd == 0:
+    if dd.days == 0:
         return True
     return False
 
