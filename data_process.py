@@ -18,14 +18,6 @@ HISTORY_FILE = 'data/temp_history.csv'
 
 def get_percentile_data(csv_file):
     result = data_process(csv_file)
-    # result = []
-    # for name in STOCK_NAMES[1:]:
-    #     a = temp_pb[name]
-    #     a = a[a.notnull()]
-    #     a = a[0: DAY_LEN]
-    #     p = stats.percentileofscore(a, a[0])
-    #     result.append(round(p, 1))
-    # return temp_pb[STOCK_NAMES[0]][0], result
     return csvDate2lxrDate(result[0]), [round(i, 1) for i in result[1:9]]
 
 
@@ -168,32 +160,39 @@ def download_data(stockCode, startDate):
         print(error)
         raise Exception(error)
 
-# 测试代码
-# DEFAULT_CSV = 'data/temp_pb.csv'
-# print(get_percentile_data(DEFAULT_CSV))
 
-# 获取中证全指收盘点位
-# request_data = {
-#         "token": TOKEN,
-#         "stockCodes": ["1000002"],
-#         "metrics": ["cp"],
-#         "startDate": "1996-01-01"
-#     }
-# result = requests.post(URL_INDICE_FUNDAMENTAL, json=request_data)
-# result_data = []
-# date = []
-# if result.status_code == 200 and result.json()['msg'] == 'success':
-#     for data in result.json()['data']:
-#         split_date = data['date'].split('T')
-#         # pb_data = {
-#         #     'date': split_date[0],
-#         #     'cp': data['cp']
-#         # }
-#         # result_data.append(pb_data)
-#         date.append(lxrDate2csvDate(split_date[0]))
-#         result_data.append(data['cp'])
-#
-# df = pd.DataFrame()
-# df.insert(0, "日期", date)
-# df.insert(1, "中证全指指数", result_data)
-# df.to_csv('sp.csv', index=False, encoding='utf-8', decimal='.')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

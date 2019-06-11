@@ -6,7 +6,7 @@ import six_gauge
 import wendu_shidu
 
 
-def generate(date, data, file):
+def generate(date, data, file, show_temp):
     """
     生成温度HTML页面
     :param date: 显示日期
@@ -15,9 +15,9 @@ def generate(date, data, file):
     :return:
     """
     page = Page()
-    gauge = six_gauge.generate_chart(date, data)
+    gauge = six_gauge.generate_chart(date, data, show_temp)
     page.add(gauge)
-    gauge = wendu_shidu.generate_chart(date, data[-2:])
+    gauge = wendu_shidu.generate_chart(date, data[-2:], show_temp)
     page.add(gauge)
     page.render(path=file)
 

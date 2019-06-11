@@ -10,7 +10,7 @@ def value_formatter(value):
     return value[0] + '.' + value[1] + '°C'
 
 
-def generate_chart(date, data):
+def generate_chart(date, data, show_temp):
     gauge = Gauge("券商温湿度", width=800, height=600)
     option = gauge._option
 
@@ -41,6 +41,7 @@ def generate_chart(date, data):
         "name": "业务指标",
         "type": "gauge",
         "detail": {
+            "show": show_temp,
             "fontSize": 20,
             "formatter": value_formatter
         },
@@ -82,6 +83,7 @@ def generate_chart(date, data):
             "width": 5
             },
         "detail": {
+            "show": show_temp,
             "fontSize": 20,
             "formatter": value_formatter
             },

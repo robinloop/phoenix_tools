@@ -12,7 +12,7 @@ def value_formatter(value):
     return value[0] + '.' + value[1] + '°C'
 
 
-def generate_chart(date, data):
+def generate_chart(date, data, show_temp):
     gauge = Gauge("指数温度", width=900, height=600)
     option = gauge._option
     option['title'] = {
@@ -67,7 +67,7 @@ def generate_chart(date, data):
             "center": LOCATION[index],
             "radius": "35%",
             "title": {
-                    "fontSize": 20
+                    "fontSize": 20,
                 },
             "axisLine": {
                 "lineStyle": {
@@ -90,12 +90,14 @@ def generate_chart(date, data):
                 "width": 5
                 },
             "detail": {
+                "show": show_temp,
                 "fontSize": 20,
                 "formatter": value_formatter
                 },
             "data": [{
                 "value": data[index],
                 "name": name
+                # "name": name + "\n B 1"
                 }]
             })
     # gauge.change_option(options)

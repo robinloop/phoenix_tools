@@ -21,3 +21,4 @@ def lxrDate2csvDate(start_date):
     month = str(int(date_arr[1]))
     day = str(int(date_arr[2]))
     return '/'.join([year, month, day])
+
