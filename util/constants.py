@@ -1,10 +1,44 @@
 # -*- coding: UTF-8 -*-
 
-DATE = '日期'
+DATE = 'date'
 
 # 指数列表，名称与code一一对应
-STOCK_NAMES = ["上证指数", "创业板指", "中证全指", "上证50", "沪深300", "中证500", "证券公司"]
-STOCK_CODES = ["1000004", "399006", "1000002", "000016", "000300", "000905", "399975"]
+STOCK_NAMES = [
+    "上证指数",
+    "沪深300",
+    "中证全指",
+    "创业板指",
+    "中小板指",
+    "上证50",
+    "中证500",
+    "证券公司",
+    "180金融",
+    "全指医药",
+    "中证军工",
+    "中证环保",
+    "中证银行",
+    "中证传媒",
+    "全指信息",
+    "红利指数"
+]
+STOCK_CODES = [
+    "1000004",
+    "000300",
+    "1000002",
+    "399006",
+    "399005",
+    "000016",
+    "000905",
+    "399975",
+    "000018",
+    "000991",
+    "399967",
+    "000827",
+    "399986",
+    "399971",
+    "000993",
+    "000015"
+]
 
 # 理杏仁API及TOKEN
 URL_INDICE_FUNDAMENTAL = "https://open.lixinger.com/api/a/indice/fundamental"
@@ -16,10 +50,10 @@ CP = 'cp'
 PB = 'pb'
 PE = 'pe'
 
-PB_PERCENTILE = 'pb_percentile'   # PB百分位数
-PE_PERCENTILE = 'pe_percentile'    # PE百分位数
-FIFTY_MEDIAN = 'fifty_median'      # 50日均线
-HUNDRED_MEDIAN = 'hundred_median'      # 100日均线
+PB_PERCENTILE = 'pb_percentile'  # PB百分位数
+PE_PERCENTILE = 'pe_percentile'  # PE百分位数
+FIFTY_MEDIAN = 'fifty_median'  # 50日均线
+HUNDRED_MEDIAN = 'hundred_median'  # 100日均线
 # 50日线信号
 FIFTY_SIGNAL = 'fifty_signal'
 # 100日线信号

@@ -28,7 +28,7 @@ def get_percentile_data(date):
 
         # 取得指定日期行的数据
         if date is None:
-            date = csvDate2lxrDate(df[constants.DATE][0])
+            date = date_utils.csvDate2lxrDate(df[constants.DATE][0])
         data = df.loc[df[constants.DATE] == date_utils.lxrDate2csvDate(date)]
         if len(data.values) == 0:
             print("指定日期不存在", date)
@@ -44,27 +44,27 @@ def get_percentile_data(date):
         data = df.loc[data_index]
         data_before = df.loc[data_index + 1]
 
-        fifty_signal = check_signal(data_before, data, constants.FIFTY_MEDIAN)
-        hundred_signal = check_signal(data_before, data, constants.HUNDRED_MEDIAN)
+        fifty_signal = check_signal(data_before, data, constants.FIFTY_MEDIAN, 1)
+        hundred_signal = check_signal(data_before, data, constants.HUNDRED_MEDIAN, 2)
         result_stock = {constants.PB_PERCENTILE: data[constants.PB_PERCENTILE],
                         constants.PE_PERCENTILE: data[constants.PE_PERCENTILE],
                         constants.FIFTY_SIGNAL: fifty_signal,
                         constants.HUNDRED_SIGNAL: hundred_signal}
         result[stock] = result_stock
-    print(result)
+    return date, result
 
 
-def check_signal(data_before, data, median_type):
+def check_signal(data_before, data, median_type, number):
     data_before_median_diff = data_before[constants.CP] - data_before[median_type]
     median_diff = data[constants.CP] - data[median_type]
     # 判断当天收盘价是否突破均线
     # 连续突破情况，首日突破表示买入
     # 买入信号，0位持平，1位买入，-1卖出
-    signal = 0
+    signal = '--'
     if median_diff > 0 and data_before_median_diff<=0:
-        signal = 1
+        signal = 'B' + str(number)
     elif median_diff < 0 and data_before_median_diff >= 0:
-        signal = -1
+        signal = 'S' + str(number)
     return signal
 
 
@@ -73,8 +73,8 @@ def read_data(stock):
     df = pd.read_csv(csv_file)
     # check 日期
     start_date = df[constants.DATE][0]
-    start_date_fix = csvDate2lxrDate(start_date)
-    if not check_today(start_date_fix):
+    start_date_fix = date_utils.csvDate2lxrDate(start_date)
+    if not date_utils.check_today(start_date_fix):
         # CSV文件数据不是最新的，先进行下载
         # 下载数据，csv文件数据补齐到最近一个交易日
         new_data = get_new_data(stock, start_date_fix)
@@ -115,54 +115,6 @@ def read_data(stock):
     return df
 
 
-def data_process(csv_file):
-    temp_pb = pd.read_csv(csv_file, encoding='utf-8')
-    temp_history = pd.read_csv(HISTORY_FILE, encoding='utf-8')
-
-    start_date = temp_pb[STOCK_NAMES[0]][0]
-    start_date_fix = csvDate2lxrDate(start_date)
-    if check_today(start_date_fix):
-        # CSV文件数据已经是最新的，无需再下载
-        return temp_history.loc[0]
-
-    new_data = get_new_data(start_date_fix)
-    if new_data.index.values.size == 0:
-        print('CSV数据已是最新 ', start_date_fix)
-        return temp_history.loc[0]
-    full_data = new_data.append(temp_pb, ignore_index=True)
-
-    new_history_result = temp_history_process(temp_history, full_data, new_data)
-
-    # 处理成功再保存数据
-    full_data.to_csv(csv_file, index=False, encoding='utf-8', decimal='.')
-
-    return new_history_result.loc[0]
-
-
-def temp_history_process(temp_history, full_data, new_data):
-    new_history_result = pd.DataFrame()
-    new_history_result.insert(0, STOCK_NAMES[0], new_data[STOCK_NAMES[0]])
-    # 计算新增数据的温度数据
-    for loc, name in enumerate(STOCK_NAMES[1:]):
-        stock_data = full_data[name]
-        result = []
-        if STOCK_NAMES[-1] == name:
-            result = new_data[name]
-        else:
-            for index, per_day in enumerate(new_data[name]):
-                # 去除空值
-                stock_data = stock_data[stock_data.notnull()]
-                a = stock_data[index: DAY_LEN + index]
-                p = stats.percentileofscore(a, a[index])
-                result.append(p)
-
-        new_history_result.insert(loc + 1, name, result)
-
-    history_full_data = new_history_result.append(temp_history, ignore_index=True)
-    history_full_data.to_csv(HISTORY_FILE, index=False, encoding='utf-8', decimal='.')
-    return new_history_result
-
-
 def get_new_data(stock, start_date_fix):
     new_data = pd.DataFrame()
     result_data = download_data(stock, start_date_fix)
@@ -172,54 +124,20 @@ def get_new_data(stock, start_date_fix):
     pes = []
     cps = []
     for data in result_data:
-        if start_date_fix == data['date']:
+        if start_date_fix == data[constants.DATE]:
             # 开始日期的数据在csv中已存在，不需要再放入新的data frame
             continue
-        pes.append(data['pe'])
-        pbs.append(data['pb'])
-        cps.append(data['cp'])
-        dates.append(lxrDate2csvDate(data['date']))
+        pes.append(data[constants.PE])
+        pbs.append(data[constants.PB])
+        cps.append(data[constants.CP])
+        dates.append(date_utils.lxrDate2csvDate(data[constants.DATE]))
 
-    # 将新的数据插入到dataframe，然后返回
-    new_data.insert(0, "日期", dates)
-    new_data.insert(1, "cp", cps)
-    new_data.insert(2, "pb", pbs)
-    new_data.insert(3, "pe", pes)
+    # 将新的数据插入到data frame，然后返回
+    new_data.insert(0, constants.DATE, dates)
+    new_data.insert(1, constants.CP, cps)
+    new_data.insert(2, constants.PB, pbs)
+    new_data.insert(3, constants.PE, pes)
     return new_data
-
-
-def csvDate2lxrDate(start_date):
-    date_arr = start_date.split('/')
-    year = date_arr[0]
-    month = date_arr[1]
-    if len(month) == 1:
-        month = "0" + month
-    day = date_arr[2]
-    if len(day) == 1:
-        day = "0" + day
-    return '-'.join([year, month, day])
-
-
-def lxrDate2csvDate(start_date):
-    date_arr = start_date.split('-')
-    year = date_arr[0]
-    month = str(int(date_arr[1]))
-    day = str(int(date_arr[2]))
-    return '/'.join([year, month, day])
-
-
-def check_today(start_date):
-    """
-    判断csv文件的最新日期是否是今天
-    :param start_date:
-    :return:
-    """
-    d = datetime.datetime.strptime(start_date, '%Y-%m-%d')
-    d2 = datetime.datetime.now()
-    dd = d2 - d
-    if dd.days == 0:
-        return True
-    return False
 
 
 def download_data(stockCode, startDate):
@@ -249,5 +167,5 @@ def download_data(stockCode, startDate):
         raise Exception(error)
 
 
-
-get_percentile_data('2019-06-06')
+result = get_percentile_data(None)
+print(result)

@@ -36,51 +36,50 @@ def download(stock):
             pes.append(data['pe_ttm']['median'])
 
     df = pd.DataFrame()
-    df.insert(0, "日期", date)
-    df.insert(1, "cp", cps)
-    df.insert(2, "pb", pbs)
-    df.insert(3, "pe", pes)
-    df.to_csv('../data/' + stock + '.csv', index=False, encoding='utf-8', decimal='.')
+    df.insert(0, constants.DATE, date)
+    df.insert(1, constants.CP, cps)
+    df.insert(2, constants.PB, pbs)
+    df.insert(3, constants.PE, pes)
+    df.to_csv('../data/back/' + stock + '.csv', index=False, encoding='utf-8', decimal='.')
 
 
 def data_process(stock):
     csv = pd.read_csv('../data/back/' + stock + '.csv')
-    print(stock, csv['日期'][0])
+    print(stock, csv[constants.DATE][0])
 
     fifty_days = []
     hundred_days = []
     pb_perentile = []
     pe_perentile = []
-    data_len = len(csv['cp'])
+    data_len = len(csv[constants.CP])
     # 处理50日均线
     for index in range(data_len):
         end = index + 50
-        avg = np.average(csv['cp'][index: end])
+        avg = np.average(csv[constants.CP][index: end])
         fifty_days.append(avg)
 
         end2 = index + 100
-        avg2 = np.average(csv['cp'][index: end2])
+        avg2 = np.average(csv[constants.CP][index: end2])
         hundred_days.append(avg2)
 
-        a = csv['pb'][index: constants.TEMPERATURE_DAY_LEN + index]
+        a = csv[constants.PB][index: constants.TEMPERATURE_DAY_LEN + index]
         p = stats.percentileofscore(a, a[index])
         pb_perentile.append(p)
 
-        a = csv['pe'][index: constants.TEMPERATURE_DAY_LEN + index]
+        a = csv[constants.PE][index: constants.TEMPERATURE_DAY_LEN + index]
         p = stats.percentileofscore(a, a[index])
         pe_perentile.append(p)
 
-    csv.insert(4, 'pb_percentile', pb_perentile)
-    csv.insert(5, 'pe_percentile', pe_perentile)
-    csv.insert(6, 'fifty_median', fifty_days)
-    csv.insert(7, 'hundred_median', hundred_days)
+    csv.insert(4, constants.PB_PERCENTILE, pb_perentile)
+    csv.insert(5, constants.PE_PERCENTILE, pe_perentile)
+    csv.insert(6, constants.FIFTY_MEDIAN, fifty_days)
+    csv.insert(7, constants.HUNDRED_MEDIAN, hundred_days)
     csv.to_csv('../data/' + stock + '.csv', index=False)
 
 
-# for stockCode in constants.STOCK_CODES:
-#     # 下载数据
-#     # download(stockCode)
-#     # 计算数据pb、pe百分位数，50、100日均线数据
-#     data_process(stockCode)
-
-data_process("1000004")
+for stockCode in constants.STOCK_CODES:
+    # 下载数据
+    # download(stockCode)
+    # 计算数据pb、pe百分位数，50、100日均线数据
+    data_process(stockCode)
+# data_process("1000004")
