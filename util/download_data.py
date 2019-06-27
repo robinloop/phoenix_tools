@@ -4,12 +4,14 @@ import util.constants as constants
 import util.date_utils as dateutils
 import pandas as pd
 import requests
+import numpy as np
+from scipy import stats
 
 # 测试代码
 DEFAULT_CSV = 'data/temp_pb.csv'
 
 
-def test(stock):
+def download(stock):
     # 获取中证全指收盘点位
     request_data = {
         "token": constants.TOKEN,
@@ -41,5 +43,44 @@ def test(stock):
     df.to_csv('../data/' + stock + '.csv', index=False, encoding='utf-8', decimal='.')
 
 
-for stockCode in constants.STOCK_CODES:
-    test(stockCode)
+def data_process(stock):
+    csv = pd.read_csv('../data/back/' + stock + '.csv')
+    print(stock, csv['日期'][0])
+
+    fifty_days = []
+    hundred_days = []
+    pb_perentile = []
+    pe_perentile = []
+    data_len = len(csv['cp'])
+    # 处理50日均线
+    for index in range(data_len):
+        end = index + 50
+        avg = np.average(csv['cp'][index: end])
+        fifty_days.append(avg)
+
+        end2 = index + 100
+        avg2 = np.average(csv['cp'][index: end2])
+        hundred_days.append(avg2)
+
+        a = csv['pb'][index: constants.TEMPERATURE_DAY_LEN + index]
+        p = stats.percentileofscore(a, a[index])
+        pb_perentile.append(p)
+
+        a = csv['pe'][index: constants.TEMPERATURE_DAY_LEN + index]
+        p = stats.percentileofscore(a, a[index])
+        pe_perentile.append(p)
+
+    csv.insert(4, 'pb_percentile', pb_perentile)
+    csv.insert(5, 'pe_percentile', pe_perentile)
+    csv.insert(6, 'fifty_median', fifty_days)
+    csv.insert(7, 'hundred_median', hundred_days)
+    csv.to_csv('../data/' + stock + '.csv', index=False)
+
+
+# for stockCode in constants.STOCK_CODES:
+#     # 下载数据
+#     # download(stockCode)
+#     # 计算数据pb、pe百分位数，50、100日均线数据
+#     data_process(stockCode)
+
+data_process("1000004")
