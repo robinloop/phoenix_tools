@@ -77,9 +77,10 @@ def data_process(stock):
     csv.to_csv('../data/' + stock + '.csv', index=False)
 
 
-for stockCode in constants.STOCK_CODES:
-    # 下载数据
-    # download(stockCode)
-    # 计算数据pb、pe百分位数，50、100日均线数据
-    data_process(stockCode)
-# data_process("1000004")
+# for stockCode in constants.STOCK_CODES:
+#     # 下载数据
+#     # download(stockCode)
+#     # 计算数据pb、pe百分位数，50、100日均线数据
+#     data_process(stockCode)
+# download("000932")
+data_process("000932")
