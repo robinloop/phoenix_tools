@@ -18,10 +18,15 @@ def generate_chart(date, data, show_temp):
     value = data['399975']
     wendu = round(value[constants.PB_PERCENTILE])
     shidu = round(value[constants.PE_PERCENTILE])
-    name = TEMP_NAME[0] + ' ' + date
+    name = TEMP_NAME[0]
     if show_temp:
         name = name + '\n ' + value[constants.FIFTY_SIGNAL] + ' ' + value[constants.HUNDRED_SIGNAL]
 
+    option['title'] = {
+        "text": "公众号：金凤钱潮策略 " + date,
+        "left": "15%",
+        "top": "7%"
+    }
     option['tooltip'] = {
         "formatter": "{b} : {c}°C"
     }
@@ -56,6 +61,9 @@ def generate_chart(date, data, show_temp):
         "title": {
             "fontSize": 20
         },
+        'axisLabel': {
+            'show': False
+        },
         "data": [{
             "value": wendu,
             "name": name
@@ -80,6 +88,9 @@ def generate_chart(date, data, show_temp):
             "lineStyle": {
                 "color": "auto"
             }
+        },
+        'axisLabel': {
+            'show': False
         },
         "splitLine": {
             "length": 15,
