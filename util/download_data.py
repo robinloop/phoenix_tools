@@ -12,28 +12,46 @@ DEFAULT_CSV = 'data/temp_pb.csv'
 
 
 def download(stock):
-    # 获取中证全指收盘点位
+    # 默认使用A股指数接口，H股指数使用不同接口
+    url = constants.URL_INDICE_FUNDAMENTAL
+    stock_code = stock
+    if str(stock).startswith('H'):
+        url = constants.URL_H_INDICE_FUNDAMENTAL
+        stock_code = str(stock).replace('H', '')
+
+    # 请求数据
     request_data = {
         "token": constants.TOKEN,
-        "stockCodes": [stock],
+        "stockCodes": [stock_code],
         "metrics": ["pb.median", "pe_ttm.median", "cp"],
-        "startDate": "1996-01-01"
+        "startDate": "2000-01-01"
     }
-    result = requests.post(constants.URL_INDICE_FUNDAMENTAL, json=request_data)
+    result = requests.post(url, json=request_data)
+
     pbs = []
     pes = []
     cps = []
     date = []
     if result.status_code == 200 and result.json()['msg'] == 'success':
         for data in result.json()['data']:
-            split_date = data['date'].split('T')
-            date.append(dateutils.lxrDate2csvDate(split_date[0]))
-            cp = ''
             if 'cp' in data.keys():
                 cp = data['cp']
-            cps.append(cp)
-            pbs.append(data['pb']['median'])
-            pes.append(data['pe_ttm']['median'])
+                cps.append(cp)
+            else:
+                continue
+
+            split_date = data['date'].split('T')
+            date.append(dateutils.lxrDate2csvDate(split_date[0]))
+
+            pb = ''
+            if 'pb' in data.keys() and'median' in data['pb'].keys():
+                pb = data['pb']['median']
+            pbs.append(pb)
+
+            pe = ''
+            if 'pe_ttm' in data.keys() and 'median' in data['pe_ttm'].keys():
+                pe = data['pe_ttm']['median']
+            pes.append(pe)
 
     df = pd.DataFrame()
     df.insert(0, constants.DATE, date)
@@ -63,11 +81,17 @@ def data_process(stock):
         hundred_days.append(avg2)
 
         a = csv[constants.PB][index: constants.TEMPERATURE_DAY_LEN + index]
-        p = stats.percentileofscore(a, a[index])
+        if a[index] == '':
+            p = ''
+        else:
+            p = stats.percentileofscore(a, a[index])
         pb_perentile.append(p)
 
         a = csv[constants.PE][index: constants.TEMPERATURE_DAY_LEN + index]
-        p = stats.percentileofscore(a, a[index])
+        if a[index] == '':
+            p = ''
+        else:
+            p = stats.percentileofscore(a, a[index])
         pe_perentile.append(p)
 
     csv.insert(4, constants.PB_PERCENTILE, pb_perentile)
@@ -82,5 +106,5 @@ def data_process(stock):
 #     # download(stockCode)
 #     # 计算数据pb、pe百分位数，50、100日均线数据
 #     data_process(stockCode)
-# download("000932")
-data_process("000932")
+# download("H10001")
+data_process("H10001")

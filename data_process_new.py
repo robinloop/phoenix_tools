@@ -19,7 +19,7 @@ STOCK_NAMES_LEN = len(STOCK_NAMES)
 HISTORY_FILE = 'data/temp_history.csv'
 
 
-def get_percentile_data(date):
+def get_result(date):
     result = {}
     # 遍历指数集合，计算每一个指数的温度及50日均线信号（指定日期50均值与收盘价比较）
     for index, stock in enumerate(constants.STOCK_CODES):
@@ -31,8 +31,8 @@ def get_percentile_data(date):
             date = date_utils.csvDate2lxrDate(df[constants.DATE][0])
         data = df.loc[df[constants.DATE] == date_utils.lxrDate2csvDate(date)]
         if len(data.values) == 0:
-            print("指定日期不存在", date)
-            pass
+            print("指定日期不存在", stock, date)
+            return date, None
 
         # 买点1：判断50日均线突破，当天收盘价是否突破50日均线
         # 买点2：判断100日均线突破，当天收盘价是否突破100日均线
@@ -141,13 +141,18 @@ def get_new_data(stock, start_date_fix):
 
 
 def download_data(stockCode, startDate):
+    url = constants.URL_INDICE_FUNDAMENTAL
+    if str(stockCode).startswith('H'):
+        url = constants.URL_H_INDICE_FUNDAMENTAL
+        stockCode = str(stockCode).replace('H', '')
+
     request_data = {
         "token": TOKEN,
         "stockCodes": [stockCode],
         "metrics": ["pb.median", "pe_ttm.median", "cp"],
         "startDate": startDate
     }
-    result = requests.post(URL_INDICE_FUNDAMENTAL, json=request_data)
+    result = requests.post(url, json=request_data)
     result_data = []
 
     if result.status_code == 200 and result.json()['msg'] == 'success':
@@ -167,5 +172,5 @@ def download_data(stockCode, startDate):
         raise Exception(error)
 
 
-result = get_percentile_data(None)
-print(result)
+# result = get_result('2019-06-29')
+# print(result)

@@ -20,7 +20,9 @@ STOCK_NAMES = [
     "中证传媒",
     "全指信息",
     "红利指数",
-    "中证消费"
+    "中证消费",
+    "恒生指数",
+    "恒生国企"
 ]
 STOCK_CODES = [
     "1000004",
@@ -39,16 +41,15 @@ STOCK_CODES = [
     "399971",
     "000993",
     "000015",
-    "000932"
+    "000932",
+    "H10001",
+    "H10002"
 ]
-
-# TODO: H股指数接口同A股不同，需要注意！！！！！
-# H股指数
-# 恒生指数 10001
-# 恒生国企 10002
 
 # 理杏仁API及TOKEN
 URL_INDICE_FUNDAMENTAL = "https://open.lixinger.com/api/a/indice/fundamental"
+URL_H_INDICE_FUNDAMENTAL = "https://open.lixinger.com/api/h/indice/fundamental"
+
 TOKEN = "8ec3e830-0fe7-4734-844c-e23d6ea119e2"
 
 # 百分位数计算范围（温度计算范围）

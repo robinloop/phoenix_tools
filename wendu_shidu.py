@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 from pyecharts import Gauge
+import util.constants as constants
 
 TEMP_NAME = ["券商温度", "券商湿度"]
 
@@ -14,9 +15,16 @@ def generate_chart(date, data, show_temp):
     gauge = Gauge("券商温湿度", width=800, height=600)
     option = gauge._option
 
+    value = data['399975']
+    wendu = round(value[constants.PB_PERCENTILE])
+    shidu = round(value[constants.PE_PERCENTILE])
+    name = TEMP_NAME[0] + ' ' + date
+    if show_temp:
+        name = name + '\n ' + value[constants.FIFTY_SIGNAL] + ' ' + value[constants.HUNDRED_SIGNAL]
+
     option['tooltip'] = {
         "formatter": "{b} : {c}°C"
-        }
+    }
     option['toolbox'] = {
         "show": False
     }
@@ -49,8 +57,8 @@ def generate_chart(date, data, show_temp):
             "fontSize": 20
         },
         "data": [{
-            "value": data[0],
-            "name": TEMP_NAME[0] + " " + date
+            "value": wendu,
+            "name": name
         }]
     })
     option['series'].append({
@@ -61,37 +69,37 @@ def generate_chart(date, data, show_temp):
         "title": {
             "fontSize": 20,
             "offsetCenter": [0, '-30%']
-            },
+        },
         "axisLine": {
             "lineStyle": {
                 "width": 8
-                }
-            },
+            }
+        },
         "axisTick": {
             "length": 8,
             "lineStyle": {
                 "color": "auto"
-                }
-            },
+            }
+        },
         "splitLine": {
             "length": 15,
             "lineStyle": {
                 "color": "auto"
-                }
-            },
+            }
+        },
         "pointer": {
             "width": 5
-            },
+        },
         "detail": {
             "show": show_temp,
             "fontSize": 20,
             "formatter": value_formatter
-            },
+        },
         "data": [{
-            "value": data[1],
+            "value": shidu,
             "name": TEMP_NAME[1]
-            }]
-        })
+        }]
+    })
     # gauge.change_option(options)
     # gauge.render(path=file, template_name='template/six_gauge_template.html', object_name='gauge')
     return gauge
