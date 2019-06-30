@@ -47,8 +47,18 @@ STOCK_CODES = [
 ]
 
 # 理杏仁API及TOKEN
-URL_INDICE_FUNDAMENTAL = "https://open.lixinger.com/api/a/indice/fundamental"
-URL_H_INDICE_FUNDAMENTAL = "https://open.lixinger.com/api/h/indice/fundamental"
+BASE_URL = 'https://open.lixinger.com'
+# A股指数基本面
+URL_INDICE_FUNDAMENTAL = BASE_URL + "/api/a/indice/fundamental"
+# H股指数基本面
+URL_H_INDICE_FUNDAMENTAL = BASE_URL + "/api/h/indice/fundamental"
+# A股个股
+URL_A = BASE_URL + "/api/a/stock"
+URL_A_FUNDAMENTAL = BASE_URL + "/api/a/stock/fundamental"
+
+# H股个股
+URL_H = BASE_URL + "/api/h/stock"
+URL_H_FUNDAMENTAL = BASE_URL + "/api/h/stock/fundamental"
 
 TOKEN = "8ec3e830-0fe7-4734-844c-e23d6ea119e2"
 

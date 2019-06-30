@@ -7,6 +7,7 @@ import requests
 import datetime
 import util.constants as constants
 import util.date_utils as date_utils
+import util.data_process as dp
 
 URL_INDICE_FUNDAMENTAL = "https://open.lixinger.com/api/a/indice/fundamental"
 TOKEN = "8ec3e830-0fe7-4734-844c-e23d6ea119e2"
@@ -44,28 +45,14 @@ def get_result(date):
         data = df.loc[data_index]
         data_before = df.loc[data_index + 1]
 
-        fifty_signal = check_signal(data_before, data, constants.FIFTY_MEDIAN, 1)
-        hundred_signal = check_signal(data_before, data, constants.HUNDRED_MEDIAN, 2)
+        fifty_signal = dp.check_signal(data_before, data, constants.FIFTY_MEDIAN, 1)
+        hundred_signal = dp.check_signal(data_before, data, constants.HUNDRED_MEDIAN, 2)
         result_stock = {constants.PB_PERCENTILE: data[constants.PB_PERCENTILE],
                         constants.PE_PERCENTILE: data[constants.PE_PERCENTILE],
                         constants.FIFTY_SIGNAL: fifty_signal,
                         constants.HUNDRED_SIGNAL: hundred_signal}
         result[stock] = result_stock
     return date, result
-
-
-def check_signal(data_before, data, median_type, number):
-    data_before_median_diff = data_before[constants.CP] - data_before[median_type]
-    median_diff = data[constants.CP] - data[median_type]
-    # 判断当天收盘价是否突破均线
-    # 连续突破情况，首日突破表示买入
-    # 买入信号，0位持平，1位买入，-1卖出
-    signal = '--'
-    if median_diff > 0 and data_before_median_diff<=0:
-        signal = 'B' + str(number)
-    elif median_diff < 0 and data_before_median_diff >= 0:
-        signal = 'S' + str(number)
-    return signal
 
 
 def read_data(stock):
