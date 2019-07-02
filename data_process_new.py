@@ -30,8 +30,9 @@ def get_result(date):
         # 取得指定日期行的数据
         if date is None:
             date = date_utils.csvDate2lxrDate(df[constants.DATE][0])
-        data = df.loc[df[constants.DATE] == date_utils.lxrDate2csvDate(date)]
-        if len(data.values) == 0:
+        # 取得指定日期之前最新一天的数据
+        data_result = df.loc[df[constants.DATE] <= date_utils.lxrDate2csvDate(date)]
+        if len(data_result.values) == 0:
             print("指定日期不存在", stock, date)
             return date, None
 
@@ -41,16 +42,20 @@ def get_result(date):
         # 连续突破情况，首日突破表示买入，后续情况多仓、持仓
 
         # 上一交易日50日均线信号
-        data_index = data.index.values[0]
-        data = df.loc[data_index]
-        data_before = df.loc[data_index + 1]
+        data_index = data_result.index.values[0]
+        data = data_result.loc[data_index]
+        data_before = data_result.loc[data_index + 1]
 
         fifty_signal = dp.check_signal(data_before, data, constants.FIFTY_MEDIAN, 1)
         hundred_signal = dp.check_signal(data_before, data, constants.HUNDRED_MEDIAN, 2)
-        result_stock = {constants.PB_PERCENTILE: data[constants.PB_PERCENTILE],
+        result_stock = {
+                        'name': constants.STOCK_NAMES[index],
+                        constants.DATE: data[constants.DATE],
+                        constants.PB_PERCENTILE: data[constants.PB_PERCENTILE],
                         constants.PE_PERCENTILE: data[constants.PE_PERCENTILE],
                         constants.FIFTY_SIGNAL: fifty_signal,
                         constants.HUNDRED_SIGNAL: hundred_signal}
+        print('指数数据:', date, result_stock)
         result[stock] = result_stock
     return date, result
 
@@ -159,5 +164,5 @@ def download_data(stockCode, startDate):
         raise Exception(error)
 
 
-# result = get_result('2019-06-29')
+# result = get_result('2019-07-01')
 # print(result)
