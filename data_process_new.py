@@ -81,18 +81,18 @@ def read_data(stock):
 
             for index in range(new_data.index.values.size):
                 end = index + 50
-                avg = np.average(full_data[constants.CP][index: end])
+                avg = np.average(pd.to_numeric(full_data[constants.CP][index: end]))
                 fifty_days.append(avg)
 
                 end2 = index + 100
-                avg2 = np.average(full_data[constants.CP][index: end2])
+                avg2 = np.average(pd.to_numeric(full_data[constants.CP][index: end2]))
                 hundred_days.append(avg2)
 
-                a = full_data[constants.PB][index: constants.TEMPERATURE_DAY_LEN + index]
+                a = pd.to_numeric(full_data[constants.PB][index: constants.TEMPERATURE_DAY_LEN + index])
                 p = stats.percentileofscore(a, a[index])
                 pb_perentile.append(p)
 
-                a = full_data[constants.PE][index: constants.TEMPERATURE_DAY_LEN + index]
+                a = pd.to_numeric(full_data[constants.PE][index: constants.TEMPERATURE_DAY_LEN + index])
                 p = stats.percentileofscore(a, a[index])
                 pe_perentile.append(p)
             # 保存数据
