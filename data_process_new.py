@@ -31,7 +31,7 @@ def get_result(date):
         if date is None:
             date = date_utils.csvDate2lxrDate(df[constants.DATE][0])
         # 取得指定日期之前最新一天的数据
-        data_result = df.loc[df[constants.DATE] <= date_utils.lxrDate2csvDate(date)]
+        data_result = df.loc[df[constants.DATE].map(lambda x: date_utils.csvDate2lxrDate(x)) <= date_utils.lxrDate2csvDate(date)]
         if len(data_result.values) == 0:
             print("指定日期不存在", stock, date)
             return date, None
@@ -164,5 +164,5 @@ def download_data(stockCode, startDate):
         raise Exception(error)
 
 
-# result = get_result('2019-07-01')
+# result = get_result('2019-10-08')
 # print(result)
