@@ -72,8 +72,8 @@ def download(stock):
     result = requests.post(url_info, json=request_data)
     if result.status_code == 200 and result.json()['msg'] == 'success':
         for data in result.json()['data']:
-            if 'cnName' in data.keys():
-                stock_name = data['cnName']
+            if 'name' in data.keys():
+                stock_name = data['name']
                 # 请求数据
                 df = dp.data_download_stock(stock_code, url_fun)
                 dp.data_calc(df)
