@@ -74,6 +74,22 @@ FIFTY_MEDIAN = 'fifty_median'  # 50日均线
 HUNDRED_MEDIAN = 'hundred_median'  # 100日均线
 # 50日线信号
 FIFTY_SIGNAL = 'fifty_signal'
-# 100日线信号
-HUNDRED_SIGNAL = 'hundred_signal'
+# 100日线信号HUNDRED_SIGNAL = 'hundred_signal'
+
+# 数据起始日期，获取2002年以后的数据
+START_DATE = '2002-01-04'
+
+# 数据库表名
+# A股指数
+TABLE_INDICE_FUNDAMENTAL_A = 'indice_fundamental_a'
+# A股个股
+TABLE_STOCK_A = 'stock_a'
+# 数据库地址
+DATABASE = 'phoenix.db'
+# 绝对温度参数
+# 计算相对温度时的数据数量（默认9年）
+RELATIVE_TEMP_YEAR = 9
+# 每年的股票交易日
+STOCK_EXCHANGE_DAY_OF_YEAR = 250
+
 

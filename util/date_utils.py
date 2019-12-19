@@ -25,15 +25,42 @@ def lxrDate2csvDate(start_date):
     return '/'.join([year, month, day])
 
 
-def check_today(start_date):
+def check_today(date):
     """
     判断csv文件的最新日期是否是今天
-    :param start_date:
+    :param date:
     :return:
     """
-    d = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+    d = datetime.datetime.strptime(date, '%Y-%m-%d')
     d2 = datetime.datetime.now()
     dd = d2 - d
     if dd.days == 0:
         return True
     return False
+
+
+def tomorrow(date):
+    """
+    取得指定日期第二天的日期
+    :param date:
+    :return:
+    """
+    d = datetime.datetime.strptime(date, '%Y-%m-%d')
+    d1 = d + datetime.timedelta(days=1)
+    return d1.strftime('%Y-%m-%d')
+
+
+def years_ago(date, n):
+    """
+    获取指定日期的n年前日期
+    :param date:
+    :param n:
+    :return:
+    """
+    d = datetime.datetime.strptime(date, '%Y-%m-%d')
+    # year = d.year - n
+    # month = d.month
+    # day = d.day
+    # d1 = datetime.date(year, month, day)
+    d1 = d + datetime.timedelta(days=-365 * n)
+    return d1.strftime('%Y-%m-%d')
