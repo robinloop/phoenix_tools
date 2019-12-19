@@ -160,4 +160,5 @@ def download_indice_fundamental_data(table_name, stockCode):
 # 第二个参数代表指数名称
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
-generate('512880', '证券ETF', 9, 5)
+generate('000300', '沪深300', 9, 5)
+generate('399975', '证券公司', 9, 5)

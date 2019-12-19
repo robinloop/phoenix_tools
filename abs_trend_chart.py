@@ -14,7 +14,7 @@ def generate(df, stockCode, stockName):
     y_axises = df["cp"]
 
     line = Line(width=1200)
-    option = option_process(stockName, CHART_NAMES, dates, y_axises, y_axises2)
+    option = option_process(stockCode, stockName, CHART_NAMES, dates, y_axises, y_axises2)
 
     # line.render('output/temp_line.html')
     # line._option = getOption()
@@ -23,10 +23,10 @@ def generate(df, stockCode, stockName):
     line.render(path=file, template_name='template/temp_history.html', object_name='line')
 
 
-def option_process(stockName, names, x_axis, y_axises, y_axises2):
+def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
     option = {
         "title": {
-            "text": stockName,
+            "text": stockName + '(' + stockCode + ')',
             "textAlign": 'center',
             'left': 200,
             'top': 10
