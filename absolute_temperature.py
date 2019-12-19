@@ -31,7 +31,7 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     download_indice_fundamental_data(table_name, stockCode)
     # 获取国债收益率
     # TODO
-    df_gz = pd.read_csv('data/国债.csv')
+    df_gz = pd.read_csv('data/guozhai.csv')
     # 计算相对温度
     df = calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_year_cnt)
     # 计算绝对温度
@@ -160,4 +160,4 @@ def download_indice_fundamental_data(table_name, stockCode):
 # 第二个参数代表指数名称
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
-generate('000300', '沪深300', 9, 5)
+generate('512880', '证券ETF', 9, 5)
