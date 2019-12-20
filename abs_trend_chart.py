@@ -146,19 +146,16 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
         }],
         'series': []
     }
-    color = ['#2f4554', '#c23531', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
-             '#546570', '#c4ccd3']
+    color = ['#2f4554', '#c23531', '#61a0a8']
     for index, name in enumerate(names):
+        line_width = 1.5
         if 0 == index:
             yAxisIndex = 0
             data = y_axises
+            line_width = 3
         else:
             yAxisIndex = 1
             data = y_axises2[index - 1]
-
-        line_width = 1.5
-        if 1 == index:
-            line_width = 2
 
         series = {
             'type': 'line',
