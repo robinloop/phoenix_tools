@@ -13,8 +13,6 @@ import abs_trend_chart
 
 
 conn = sqlite.get_conn('data/' + constants.DATABASE)
-# 计算相对温度的时间周期
-RELATIVE_TEMP_LENGTH = 2000
 
 
 def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
@@ -26,23 +24,45 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     :return:
     """
     print('计算绝对温度开始', stockCode)
+
     table_name = constants.TABLE_INDICE_FUNDAMENTAL_A
+    url = constants.URL_INDICE_FUNDAMENTAL
+    flg = 'A'
+    if str(stockCode).startswith('H'):
+        table_name = constants.TABLE_INDICE_FUNDAMENTAL_H
+        url = constants.URL_H_INDICE_FUNDAMENTAL
+        flg = 'H'
+        # stockCode = str(stockCode).replace('H', '')
+
+    # 如果表不存在先建表
+    sql_start = 'CREATE TABLE IF NOT EXISTS ' + table_name
+    sql_schema = """
+         (
+           code           TEXT    NOT NULL,
+           date           TEXT     NOT NULL,
+           cp       REAL,
+           pb       REAL, 
+           pe       REAL,
+           primary key (code, date));
+    """
+    sql = sql_start + sql_schema
+    sqlite.create_table(conn, sql)
     # 取得指数基本面数据
-    download_indice_fundamental_data(table_name, stockCode)
+    download_indice_fundamental_data(url, table_name, stockCode)
     # 获取国债收益率
     # TODO
     df_gz = pd.read_csv('data/guozhai.csv')
     # 计算相对温度
     df = calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_year_cnt)
     # 计算绝对温度
-    calc_absolute_tempreture(df, df_gz, stockCode, temp_year_cnt)
+    calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt)
     print('计算绝对温度结束', stockCode)
 
-    abs_trend_chart.generate(df, stockCode, stockName)
+    abs_trend_chart.generate(df, flg, stockCode, stockName)
     print('生成图')
 
 
-def calc_absolute_tempreture(df, df_gz, stockCode, temp_year_cnt):
+def calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt):
     # 查询数据中没有计算相对温度的最大日期
     print('计算绝对温度开始', stockCode)
     absolute_temp = []
@@ -53,7 +73,7 @@ def calc_absolute_tempreture(df, df_gz, stockCode, temp_year_cnt):
 
     df['absolute_temp'] = absolute_temp
     print('计算绝对温度结束', stockCode)
-    df.to_sql('test_' + stockCode, con=conn, if_exists='replace', index=False)
+    df.to_sql(table_name + '_' + stockCode, con=conn, if_exists='replace', index=False)
     return df
 
 
@@ -90,7 +110,7 @@ def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_ye
     df['pba'] = pba
     df['s'] = sa
     print('计算相对温度结束', stockCode)
-    df.to_sql('test_' + stockCode, con=conn, if_exists='replace', index=False)
+    df.to_sql(table_name + '_' + stockCode, con=conn, if_exists='replace', index=False)
     return df
 
 
@@ -109,7 +129,7 @@ def calc_relative_temp(df, index, temp_year_cnt, column):
     return p
 
 
-def download_indice_fundamental_data(table_name, stockCode):
+def download_indice_fundamental_data(url, table_name, stockCode):
     sql = 'SELECT MAX(DATE) FROM ' + table_name + ' WHERE code = ?'
     max_date = sqlite.fetchone(conn, sql, stockCode)[0]
     print('指数基本面最新日期:', max_date)
@@ -126,7 +146,6 @@ def download_indice_fundamental_data(table_name, stockCode):
         max_date = dateutil.tomorrow(max_date)
 
     print('指数基本面数据下载开始', stockCode)
-    url = constants.URL_INDICE_FUNDAMENTAL
     request_data = {
         "token": constants.TOKEN,
         "stockCodes": [stockCode],
@@ -138,19 +157,22 @@ def download_indice_fundamental_data(table_name, stockCode):
 
     if result.status_code == 200 and result.json()['msg'] == 'success':
         for data in result.json()['data']:
-            split_date = data['date'].split('T')
-            result_data.append(
-                (stockCode,
-                 split_date[0],
-                 data['cp'],
-                 data['pb']['weightedAvg'],
-                 data['pe_ttm']['weightedAvg'])
-            )
+            if 'pb' in data.keys() and 'cp' in data.keys():
+                if 'weightedAvg' in data['pb'].keys():
+                    split_date = data['date'].split('T')
+                    result_data.append(
+                        (stockCode,
+                         split_date[0],
+                         data['cp'],
+                         data['pb']['weightedAvg'],
+                         data['pe_ttm']['weightedAvg'])
+                    )
         sql = 'INSERT INTO ' + table_name + ' (code, date, cp, pb, pe) VALUES (?, ?, ?, ?, ?)'
         sqlite.save(conn, sql=sql, data=result_data)
     else:
-        error = '从理性人下载数据失败 : ' + result.json()
+        error = '从理性人下载数据失败 : '
         print(error)
+        print('result ', result)
         raise Exception(error)
     print('指数基本面数据下载结束', stockCode)
 
@@ -160,5 +182,5 @@ def download_indice_fundamental_data(table_name, stockCode):
 # 第二个参数代表指数名称
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
-generate('000300', '沪深300', 9, 5)
+generate('HSI', '恒生指数', 9, 5)
 generate('399975', '证券公司', 9, 5)

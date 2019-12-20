@@ -101,7 +101,7 @@ def create_table(conn, sql):
             print('执行sql:[{}]'.format(sql))
         cu.execute(sql)
         conn.commit()
-        print('创建数据库表[student]成功!')
+        print('创建数据库表成功!')
         close_all(conn, cu)
     else:
         print('the [{}] is empty or equal None!'.format(sql))

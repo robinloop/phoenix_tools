@@ -6,7 +6,7 @@ import pandas as pd
 CHART_NAMES = ["收盘点位", "绝对温度", "相对温度"]
 
 
-def generate(df, stockCode, stockName):
+def generate(df, flg, stockCode, stockName):
     dates = df['date']
     y_axises2 = []
     y_axises2.append(df['absolute_temp'])
@@ -18,7 +18,7 @@ def generate(df, stockCode, stockName):
 
     # line.render('output/temp_line.html')
     # line._option = getOption()
-    file = 'output/abs_temp_line_' + stockCode + '.html'
+    file = 'output/abs_temp_line_' + flg + '_' + stockCode + '.html'
     line._option = option
     line.render(path=file, template_name='template/temp_history.html', object_name='line')
 
@@ -113,8 +113,11 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
                 "type": "value",
                 "min": "dataMin",
                 "max": "dataMax",
-                "maxInterval": 1000,
+                # "maxInterval": 1000,
                 "minInterval": 100,
+                "splitLine": {
+                    "show": False
+                },
                 # "nameLocation": 'start',
                 # "max": 5,
                 # "type": 'value',
@@ -143,9 +146,8 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
         }],
         'series': []
     }
-    color = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
+    color = ['#2f4554', '#c23531', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074',
              '#546570', '#c4ccd3']
-    length = len(names)
     for index, name in enumerate(names):
         if 0 == index:
             yAxisIndex = 0
@@ -153,6 +155,10 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
         else:
             yAxisIndex = 1
             data = y_axises2[index - 1]
+
+        line_width = 1.5
+        if 1 == index:
+            line_width = 2
 
         series = {
             'type': 'line',
@@ -162,7 +168,7 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
             'symbol': 'none',
             "smooth": True,
             "lineStyle": {
-                "width": 1.5
+                "width": line_width
             },
             "color": color[index]
         }
