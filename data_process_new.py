@@ -136,7 +136,7 @@ def download_data(stockCode, startDate):
     url = constants.URL_INDICE_FUNDAMENTAL
     if str(stockCode).startswith('H'):
         url = constants.URL_H_INDICE_FUNDAMENTAL
-        stockCode = str(stockCode).replace('H', '')
+        # stockCode = str(stockCode).replace('H', '')
 
     request_data = {
         "token": TOKEN,
