@@ -35,18 +35,7 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
         flg = 'stock_H'
 
     # 如果表不存在先建表
-    sql_start = 'CREATE TABLE IF NOT EXISTS ' + table_name
-    sql_schema = """
-         (
-           code           TEXT    NOT NULL,
-           date           TEXT     NOT NULL,
-           cp       REAL,
-           pb       REAL, 
-           pe       REAL,
-           primary key (code, date));
-    """
-    sql = sql_start + sql_schema
-    sqlite.create_table(conn, sql)
+    create_table(table_name)
     # 取得指数基本面数据
     download_indice_fundamental_data(url, table_name, stockCode)
     # 获取国债收益率
@@ -60,6 +49,21 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
 
     abs_trend_chart.generate(df, flg, stockCode, stockName)
     print('生成图')
+
+
+def create_table(table_name):
+    sql_start = 'CREATE TABLE IF NOT EXISTS ' + table_name
+    sql_schema = """
+         (
+           code           TEXT    NOT NULL,
+           date           TEXT     NOT NULL,
+           cp       REAL,
+           pb       REAL, 
+           pe       REAL,
+           primary key (code, date));
+    """
+    sql = sql_start + sql_schema
+    sqlite.create_table(conn, sql)
 
 
 def calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt):
