@@ -27,12 +27,12 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
 
     table_name = constants.TABLE_STOCK_A
     url = constants.URL_A_FUNDAMENTAL
-    flg = 'A'
+    flg = 'stock_A'
     if str(stockCode).startswith('H'):
         table_name = constants.TABLE_STOCK_H
         url = constants.URL_H_FUNDAMENTAL
         stockCode = str(stockCode).replace('H', '')
-        flg = 'H'
+        flg = 'stock_H'
 
     # 如果表不存在先建表
     sql_start = 'CREATE TABLE IF NOT EXISTS ' + table_name

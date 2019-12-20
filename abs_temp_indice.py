@@ -27,11 +27,11 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
 
     table_name = constants.TABLE_INDICE_FUNDAMENTAL_A
     url = constants.URL_INDICE_FUNDAMENTAL
-    flg = 'A'
+    flg = 'indice_A'
     if str(stockCode).startswith('H'):
         table_name = constants.TABLE_INDICE_FUNDAMENTAL_H
         url = constants.URL_H_INDICE_FUNDAMENTAL
-        flg = 'H'
+        flg = 'indice_H'
         # stockCode = str(stockCode).replace('H', '')
 
     # 如果表不存在先建表
