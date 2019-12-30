@@ -66,7 +66,7 @@ df = pd.read_csv('data/guozhai.csv')
 df.to_sql(table_name, con=conn, if_exists='replace', index=False)
 
 sql = 'SELECT MAX(DATE) FROM ' + table_name + ' ORDER BY DATE DESC'
-max_date = sqlite.fetchone(conn, sql)[0]
+max_date = sqlite.fetchone(conn, sql, data=None)[0]
 print('指数基本面最新日期:', max_date)
 
 # sql = 'SELECT date FROM indice_fundamental_a ' \
