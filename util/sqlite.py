@@ -164,7 +164,7 @@ def fetchall(conn, sql, data=None):
         return None
 
 
-def fetchone(conn, sql, data):
+def fetchone(conn, sql, data=None):
     '''查询一条数据'''
     if sql is not None and sql != '':
         if data is not None:

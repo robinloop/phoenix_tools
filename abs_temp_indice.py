@@ -187,5 +187,5 @@ def download_indice_fundamental_data(url, table_name, stockCode):
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
 # generate('HSI', '恒生指数', 9, 5)
-# generate('399975', '证券公司', 9, 5)
-generate('HSCEI', '国企指数', 9, 5)
+generate('399975', '证券公司', 9, 5)
+# generate('HSCEI', '国企指数', 9, 5)
