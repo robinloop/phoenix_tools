@@ -3,8 +3,8 @@
 from pyecharts import Line
 import pandas as pd
 
-CHART_NAMES = ["指数收益率", "国债收益率", "BP差"]
-Y_AXIS_NAMES = ['收益率', 'BP差']
+CHART_NAMES = ["指数收益率%", "10年国债收益率%", "BP差"]
+Y_AXIS_NAMES = ['收益率%', 'BP差']
 LINE_COLOR = ['#c23531', '#006400', '#000000']
 
 
@@ -152,11 +152,11 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
     for index, name in enumerate(names):
         line_width = 1.5
         if 2 == index:
-            yAxisIndex = 0
-            data = y_axises2
-            line_width = 3
-        else:
             yAxisIndex = 1
+            data = y_axises2
+            line_width = 1
+        else:
+            yAxisIndex = 0
             data = y_axises[index]
 
         series = {

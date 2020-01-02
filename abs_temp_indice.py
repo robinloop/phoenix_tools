@@ -61,7 +61,7 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
 
 def get_niuxiong_data(code):
     sql = """
-        SELECT i.date, 100/pe as shouyi, round((1/pe - g.roe * 0.01)*10000) as bp, g.roe as g_roe
+        SELECT i.date, round(100/pe, 2) as shouyi, round((1/pe - g.roe * 0.01)*10000) as bp, round(g.roe, 2) as g_roe
         FROM indice_fundamental_a i  
         left join guozhai g 
         on i.date = g.date 
