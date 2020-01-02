@@ -115,6 +115,9 @@ def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_ye
     df['s'] = sa
     print('计算相对温度结束', stockCode)
     df.to_sql(table_name + '_' + stockCode, con=conn, if_exists='replace', index=False)
+    csv = 'data/' + table_name + '_' + stockCode + '.csv'
+    df.to_csv(csv, index=False, encoding='utf-8', decimal='.')
+    print('数据输出到csv文件：',  csv)
     return df
 
 
