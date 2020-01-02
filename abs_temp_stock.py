@@ -106,7 +106,7 @@ def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_ye
         # 获取国债收益率
         df_gz_split = df_gz[df_gz['date'] <= df['date'][index]]
         r = df_gz_split['roe'][df_gz_split.index.values[0]]
-        r = r/100
+        r = r * 2 * 0.01
         r1 = np.power(roe + 1, roe_year_cnt) - 1
         r2 = np.power(r + 1, roe_year_cnt) - 1
         s = r1/r2

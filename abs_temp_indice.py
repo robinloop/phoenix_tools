@@ -10,6 +10,7 @@ import pandas as pd
 from scipy import stats
 import numpy as np
 import abs_trend_chart
+import indice_niuxiong_chart
 
 
 conn = sqlite.get_conn('data/' + constants.DATABASE)
@@ -47,8 +48,28 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt)
     print('计算绝对温度结束', stockCode)
 
+    print('生成温度曲线图开始')
     abs_trend_chart.generate(df, flg, stockCode, stockName)
-    print('生成图')
+    print('生成温度曲线图结束')
+
+    print('生成牛熊周期图开始')
+    # 获取数据
+    df_nx = get_niuxiong_data(stockCode)
+    indice_niuxiong_chart.generate(df_nx, flg, stockCode, stockName)
+    print('生成牛熊周期图结束')
+
+
+def get_niuxiong_data(code):
+    sql = """
+        SELECT i.date, 100/pe as shouyi, round((1/pe - g.roe * 0.01)*10000) as bp, g.roe as g_roe
+        FROM indice_fundamental_a i  
+        left join guozhai g 
+        on i.date = g.date 
+        where i.code =:code
+        order by i.date
+    """
+    df = pd.read_sql(sql, conn, params={'code': code})
+    return df
 
 
 def create_table(table_name):
@@ -78,6 +99,10 @@ def calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt):
     df['absolute_temp'] = absolute_temp
     print('计算绝对温度结束', stockCode)
     df.to_sql(table_name + '_' + stockCode, con=conn, if_exists='replace', index=False)
+
+    csv = 'data/' + table_name + '_' + stockCode + '.csv'
+    df.to_csv(csv, index=False, encoding='utf-8', decimal='.')
+    print('数据输出到csv文件：',  csv)
     return df
 
 
@@ -101,7 +126,7 @@ def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_ye
         # 获取国债收益率
         df_gz_split = df_gz[df_gz['date'] <= df['date'][index]]
         r = df_gz_split['roe'][df_gz_split.index.values[0]]
-        r = r/100
+        r = r * 2 * 0.01
         r1 = np.power(roe + 1, roe_year_cnt) - 1
         r2 = np.power(r + 1, roe_year_cnt) - 1
         s = r1/r2
@@ -115,9 +140,6 @@ def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_ye
     df['s'] = sa
     print('计算相对温度结束', stockCode)
     df.to_sql(table_name + '_' + stockCode, con=conn, if_exists='replace', index=False)
-    csv = 'data/' + table_name + '_' + stockCode + '.csv'
-    df.to_csv(csv, index=False, encoding='utf-8', decimal='.')
-    print('数据输出到csv文件：',  csv)
     return df
 
 
@@ -190,5 +212,5 @@ def download_indice_fundamental_data(url, table_name, stockCode):
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
 # generate('HSI', '恒生指数', 9, 5)
-generate('399975', '证券公司', 9, 5)
+generate('000300', '沪深300', 9, 5)
 # generate('HSCEI', '国企指数', 9, 5)

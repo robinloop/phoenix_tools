@@ -3,26 +3,26 @@
 from pyecharts import Line
 import pandas as pd
 
-CHART_NAMES = ["收盘点位", "绝对温度", "相对温度"]
-Y_AXIS_NAMES = ['收盘价', '温度']
-LINE_COLOR = ['#000000', '#c23531', '#006400']
+CHART_NAMES = ["指数收益率", "国债收益率", "BP差"]
+Y_AXIS_NAMES = ['收益率', 'BP差']
+LINE_COLOR = ['#c23531', '#006400', '#000000']
 
 
 def generate(df, flg, stockCode, stockName):
     dates = df['date']
-    y_axises2 = []
-    y_axises2.append(df['absolute_temp'])
-    y_axises2.append(df['relative_temp'])
-    y_axises = df["cp"]
+    y_axises = []
+    y_axises.append(df['shouyi'])
+    y_axises.append(df['g_roe'])
+    y_axises2 = df["bp"]
 
     line = Line(width=1200)
     option = option_process(stockCode, stockName, CHART_NAMES, dates, y_axises, y_axises2)
 
     # line.render('output/temp_line.html')
     # line._option = getOption()
-    file = 'output/abs_temp_line_' + flg + '_' + stockCode + '.html'
+    file = 'output/niuxiong_line_' + flg + '_' + stockCode + '.html'
     line._option = option
-    line.render(path=file, template_name='template/temp_history.html', object_name='line')
+    line.render(path=file, template_name='template/temp_history2.html', object_name='line')
 
 
 def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
@@ -116,7 +116,7 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
                 "min": "dataMin",
                 "max": "dataMax",
                 # "maxInterval": 1000,
-                "minInterval": 100,
+                # "minInterval": 100,
                 "splitLine": {
                     "show": False
                 },
@@ -130,8 +130,8 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
                 "splitArea": {
                     "show": True
                 },
-                'max': 100,
-                'interval': 10
+                # 'max': 100,
+                # 'interval': 10
                 # 'boundaryGap': [0, '100%'],
             }
         ],
@@ -151,13 +151,13 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
 
     for index, name in enumerate(names):
         line_width = 1.5
-        if 0 == index:
+        if 2 == index:
             yAxisIndex = 0
-            data = y_axises
+            data = y_axises2
             line_width = 3
         else:
             yAxisIndex = 1
-            data = y_axises2[index - 1]
+            data = y_axises[index]
 
         series = {
             'type': 'line',
