@@ -3,7 +3,7 @@
 from pyecharts import Line
 import pandas as pd
 
-CHART_NAMES = ["指数收益率%", "10年国债收益率%", "BP差"]
+CHART_NAMES = ["指数收益率%", "10年国债收益率% * 2", "BP差"]
 Y_AXIS_NAMES = ['收益率%', 'BP差']
 LINE_COLOR = ['#c23531', '#006400', '#000000']
 

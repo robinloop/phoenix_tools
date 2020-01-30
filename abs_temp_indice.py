@@ -52,16 +52,16 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     abs_trend_chart.generate(df, flg, stockCode, stockName)
     print('生成温度曲线图结束')
 
-    print('生成牛熊周期图开始')
-    # 获取数据
-    df_nx = get_niuxiong_data(stockCode)
-    indice_niuxiong_chart.generate(df_nx, flg, stockCode, stockName)
-    print('生成牛熊周期图结束')
+    # print('生成牛熊周期图开始')
+    # # 获取数据
+    # df_nx = get_niuxiong_data(stockCode)
+    # indice_niuxiong_chart.generate(df_nx, flg, stockCode, stockName)
+    # print('生成牛熊周期图结束')
 
 
 def get_niuxiong_data(code):
     sql = """
-        SELECT i.date, round(100/pe, 2) as shouyi, round((1/pe - g.roe * 0.01)*10000) as bp, round(g.roe, 2) as g_roe
+        SELECT i.date, round(100/pe, 2) as shouyi, round((1/pe - g.roe * 0.01)*10000) as bp, round(g.roe, 2) * 2 as g_roe
         FROM indice_fundamental_a i  
         left join guozhai g 
         on i.date = g.date 
