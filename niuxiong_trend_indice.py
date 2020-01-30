@@ -18,21 +18,23 @@ def generate(stockCode, stockName):
     :return:
     """
     flg = 'indice_A'
+    table_name = constants.TABLE_INDICE_FUNDAMENTAL_A
     if str(stockCode).startswith('H'):
         flg = 'indice_H'
+        table_name = constants.TABLE_INDICE_FUNDAMENTAL_H
         # stockCode = str(stockCode).replace('H', '')
 
     print('生成牛熊周期图开始')
     # 获取数据
-    df_nx = get_niuxiong_data(stockCode)
+    df_nx = get_niuxiong_data(table_name, stockCode)
     indice_niuxiong_chart.generate(df_nx, flg, stockCode, stockName)
     print('生成牛熊周期图结束')
 
 
-def get_niuxiong_data(code):
+def get_niuxiong_data(table_name, code):
     sql = """
         SELECT i.date, round(100/pe, 2) as shouyi, round((1/pe - g.roe * 0.01)*10000) as bp, round(g.roe, 2) * 2 as g_roe
-        FROM indice_fundamental_a i  
+        FROM """ + table_name + """ i  
         left join guozhai g 
         on i.date = g.date 
         where i.code =:code
@@ -42,4 +44,4 @@ def get_niuxiong_data(code):
     return df
 
 
-generate('000300', '沪深300')
+generate('HSI', '恒生指数')
