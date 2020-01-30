@@ -45,3 +45,4 @@ def get_niuxiong_data(table_name, code):
 
 
 generate('HSI', '恒生指数')
+generate('000300', '沪深300')
