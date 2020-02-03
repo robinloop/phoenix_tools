@@ -24,20 +24,22 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     :return:
     """
     print('计算绝对温度开始', stockCode)
-
-    table_name = constants.TABLE_STOCK_A
+    # A股变前复权，港股还用收盘价
+    table_name = constants.TABLE_STOCK_A + "_qfq"
     url = constants.URL_A_FUNDAMENTAL
     flg = 'stock_A'
+    sp = "fc_rights"
     if str(stockCode).startswith('H'):
         table_name = constants.TABLE_STOCK_H
         url = constants.URL_H_FUNDAMENTAL
         stockCode = str(stockCode).replace('H', '')
         flg = 'stock_H'
+        sp = "sp"
 
     # 如果表不存在先建表
     create_table(table_name)
     # 取得指数基本面数据
-    download_indice_fundamental_data(url, table_name, stockCode)
+    download_indice_fundamental_data(url, table_name, stockCode, sp)
     # 获取国债收益率
     # TODO
     df_gz = pd.read_csv('data/guozhai.csv')
@@ -138,7 +140,7 @@ def calc_relative_temp(df, index, temp_year_cnt, column):
     return p
 
 
-def download_indice_fundamental_data(url, table_name, stockCode):
+def download_indice_fundamental_data(url, table_name, stockCode, sp):
     sql = 'SELECT MAX(DATE) FROM ' + table_name + ' WHERE code = ?'
     max_date = sqlite.fetchone(conn, sql, stockCode)[0]
     print('指数基本面最新日期:', max_date)
@@ -158,7 +160,7 @@ def download_indice_fundamental_data(url, table_name, stockCode):
     request_data = {
         "token": constants.TOKEN,
         "stockCodes": [stockCode],
-        "metrics": ["pb", "pe_ttm", "sp"],
+        "metrics": ["pb", "pe_ttm", sp],
         "startDate": max_date
     }
     result = requests.post(url, json=request_data)
@@ -170,7 +172,7 @@ def download_indice_fundamental_data(url, table_name, stockCode):
             result_data.append(
                 (stockCode,
                  split_date[0],
-                 data['sp'],
+                 data[sp],
                  data['pb'],
                  data['pe_ttm'])
             )
