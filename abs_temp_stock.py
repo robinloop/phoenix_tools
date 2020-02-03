@@ -91,7 +91,7 @@ def calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt):
 def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_year_cnt):
     # 查询数据中没有计算相对温度的最大日期
     print('计算相对温度开始', stockCode)
-    sql = 'SELECT date, cp, pb, pe, 1/pb, pb/pe as roe FROM ' + table_name + ' WHERE code = ? order by date'
+    sql = 'SELECT date, round(cp, 2) as cp, pb, pe, 1/pb, pb/pe as roe FROM ' + table_name + ' WHERE code = ? order by date'
     # result = sqlite.fetchall(conn, sql, stockCode)
     # df = pd.DataFrame(result, columns=['date', 'cp', 'pb', 'pe', '1/pb', 'roe'])
     df = pd.read_sql_query(sql, conn, params=(stockCode,))
@@ -191,5 +191,6 @@ def download_indice_fundamental_data(url, table_name, stockCode, sp):
 # 第二个参数代表指数名称
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
-generate('H00700', '港股', 9, 5)
-generate('600674', '川投能源', 9, 5)
+# generate('H00700', '港股', 9, 5)
+# generate('600674', '川投能源', 9, 5)
+generate('601668', '中国建筑', 9, 5)
