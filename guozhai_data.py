@@ -55,7 +55,7 @@ def get_guozhai_data(conn, date):
 
 def save_to_db(conn, date, value):
     sql = 'INSERT INTO ' + table_name + ' (date, roe) VALUES (?, ?)'
-    print(sql, date, value)
+    # print(sql, date, value)
     result_data = [(date, value)]
     sqlite.save(conn, sql=sql, data=result_data)
 
