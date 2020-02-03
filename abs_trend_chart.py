@@ -4,11 +4,14 @@ from pyecharts import Line
 import pandas as pd
 
 CHART_NAMES = ["收盘点位", "绝对温度", "相对温度"]
-Y_AXIS_NAMES = ['收盘价', '温度']
+# Y_AXIS_NAMES = ['收盘价', '温度']
 LINE_COLOR = ['#000000', '#c23531', '#006400']
 
 
 def generate(df, flg, stockCode, stockName):
+    Y_AXIS_NAMES = ['收盘价', '温度']
+    if flg is 'stock_A':
+        Y_AXIS_NAMES = ['前复权', '温度']
     dates = df['date']
     y_axises2 = []
     y_axises2.append(df['absolute_temp'])
@@ -16,7 +19,7 @@ def generate(df, flg, stockCode, stockName):
     y_axises = df["cp"]
 
     line = Line(width=1200)
-    option = option_process(stockCode, stockName, CHART_NAMES, dates, y_axises, y_axises2)
+    option = option_process(stockCode, stockName, CHART_NAMES, dates, y_axises, y_axises2, Y_AXIS_NAMES)
 
     # line.render('output/temp_line.html')
     # line._option = getOption()
@@ -25,7 +28,7 @@ def generate(df, flg, stockCode, stockName):
     line.render(path=file, template_name='template/temp_history.html', object_name='line')
 
 
-def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2):
+def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2, Y_AXIS_NAMES):
     option = {
         "title": {
             "text": stockName + '(' + stockCode + ')',
