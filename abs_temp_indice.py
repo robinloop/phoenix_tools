@@ -103,6 +103,7 @@ def calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt):
     csv = 'data/' + table_name + '_' + stockCode + '.csv'
     df.to_csv(csv, index=False, encoding='utf-8', decimal='.')
     print('数据输出到csv文件：',  csv)
+    print(df.tail(1).ix[df.index.size - 1])
     return df
 
 
