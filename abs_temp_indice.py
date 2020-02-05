@@ -10,8 +10,7 @@ import pandas as pd
 from scipy import stats
 import numpy as np
 import abs_trend_chart
-import indice_niuxiong_chart
-
+from pyecharts import Page
 
 conn = sqlite.get_conn('data/' + constants.DATABASE)
 
@@ -49,9 +48,9 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     print('计算绝对温度结束', stockCode)
 
     print('生成温度曲线图开始')
-    abs_trend_chart.generate(df, flg, stockCode, stockName)
+    chart = abs_trend_chart.generate(df, flg, stockCode, stockName)
     print('生成温度曲线图结束')
-
+    return chart
     # print('生成牛熊周期图开始')
     # # 获取数据
     # df_nx = get_niuxiong_data(stockCode)
@@ -207,11 +206,25 @@ def download_indice_fundamental_data(url, table_name, stockCode):
     print('指数基本面数据下载结束', stockCode)
 
 
+def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name):
+    page = Page("金凤钱潮策略（公众号：jinfengQC）周期框架1- 温度曲线图")
+    for stock in stocks:
+        chart = generate(stock[0], stock[1], temp_year_cnt, roe_year_cnt)
+        page.add(chart)
+    file = 'output/' + file_name + '.html'
+    page.render(path=file)
 # 只支持A股指数，
 # 第一个参数是指数代码，
 # 第二个参数代表指数名称
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
 # generate('HSI', '恒生指数', 9, 5)
-generate('000300', '沪深300', 9, 5)
+# generate('000300', '沪深300', 9, 5)
 # generate('HSCEI', '国企指数', 9, 5)
+
+
+stock_list = [
+    ('000300', '沪深300'),
+    ('HSI', '恒生指数')
+]
+generate_list(stock_list, 9, 5, '指数合并输出')

@@ -10,6 +10,7 @@ import pandas as pd
 from scipy import stats
 import numpy as np
 import abs_trend_chart
+from pyecharts import Page
 
 
 conn = sqlite.get_conn('data/' + constants.DATABASE)
@@ -49,8 +50,9 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt)
     print('计算绝对温度结束', stockCode)
 
-    abs_trend_chart.generate(df, flg, stockCode, stockName)
+    chart = abs_trend_chart.generate(df, flg, stockCode, stockName)
     print('生成图')
+    return chart
 
 
 def create_table(table_name):
@@ -85,6 +87,7 @@ def calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt):
     csv = 'data/' + table_name + '_' + stockCode + '.csv'
     df.to_csv(csv, index=False, encoding='utf-8', decimal='.')
     print('数据输出到csv文件：',  csv)
+    print(df.tail(1).ix[df.index.size - 1])
     return df
 
 
@@ -186,6 +189,15 @@ def download_indice_fundamental_data(url, table_name, stockCode, sp):
     print('指数基本面数据下载结束', stockCode)
 
 
+def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name):
+    page = Page("金凤钱潮策略（公众号：jinfengQC）周期框架1- 温度曲线图")
+    for stock in stocks:
+        chart = generate(stock[0], stock[1], temp_year_cnt, roe_year_cnt)
+        page.add(chart)
+    file = 'output/' + file_name + '.html'
+    page.render(path=file)
+
+
 # 只支持A股指数，
 # 第一个参数是指数代码，
 # 第二个参数代表指数名称
@@ -193,4 +205,10 @@ def download_indice_fundamental_data(url, table_name, stockCode, sp):
 # 第四个参数5代表收益率T年（计算S）
 # generate('H00700', '港股', 9, 5)
 # generate('600674', '川投能源', 9, 5)
-generate('601668', '中国建筑', 9, 5)
+# generate('601668', '中国建筑', 9, 5)
+
+stock_list = [
+    ('601668', '中国建筑'),
+    ('600674', '川投能源')
+]
+generate_list(stock_list, 9, 5, '个股合并输出')

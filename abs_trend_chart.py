@@ -18,7 +18,7 @@ def generate(df, flg, stockCode, stockName):
     y_axises2.append(df['relative_temp'])
     y_axises = df["cp"]
 
-    line = Line(width=1200)
+    line = Line(width=1200, title=stockName)
     option = option_process(stockCode, stockName, CHART_NAMES, dates, y_axises, y_axises2, Y_AXIS_NAMES)
 
     # line.render('output/temp_line.html')
@@ -26,6 +26,7 @@ def generate(df, flg, stockCode, stockName):
     file = 'output/abs_temp_line_' + flg + '_' + stockCode + '.html'
     line._option = option
     line.render(path=file, template_name='template/temp_history.html', object_name='line')
+    return line
 
 
 def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2, Y_AXIS_NAMES):
