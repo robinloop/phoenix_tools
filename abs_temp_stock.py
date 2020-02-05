@@ -16,7 +16,7 @@ from pyecharts import Page
 conn = sqlite.get_conn('data/' + constants.DATABASE)
 
 
-def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
+def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt, is_gen_single=True):
     """
     绝对温度计算
     :param stockCode: 指数代码
@@ -50,7 +50,7 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt):
     calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt)
     print('计算绝对温度结束', stockCode)
 
-    chart = abs_trend_chart.generate(df, flg, stockCode, stockName)
+    chart = abs_trend_chart.generate(df, flg, stockCode, stockName, is_gen_single)
     print('生成图')
     return chart
 
@@ -189,10 +189,10 @@ def download_indice_fundamental_data(url, table_name, stockCode, sp):
     print('指数基本面数据下载结束', stockCode)
 
 
-def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name):
+def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name, is_gen_single):
     page = Page("金凤钱潮策略（公众号：jinfengQC）周期框架1- 温度曲线图")
     for stock in stocks:
-        chart = generate(stock[0], stock[1], temp_year_cnt, roe_year_cnt)
+        chart = generate(stock[0], stock[1], temp_year_cnt, roe_year_cnt, is_gen_single)
         page.add(chart)
     file = 'output/' + file_name + '.html'
     page.render(path=file)
@@ -207,8 +207,10 @@ def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name):
 # generate('600674', '川投能源', 9, 5)
 # generate('601668', '中国建筑', 9, 5)
 
+# 是否生成每一个指数的html，默认生成
+is_gen_single = True
 stock_list = [
     ('601668', '中国建筑'),
     ('600674', '川投能源')
 ]
-generate_list(stock_list, 9, 5, '个股合并输出')
+generate_list(stock_list, 9, 5, '个股合并输出', is_gen_single)

@@ -8,7 +8,7 @@ CHART_NAMES = ["收盘点位", "绝对温度", "相对温度"]
 LINE_COLOR = ['#000000', '#c23531', '#006400']
 
 
-def generate(df, flg, stockCode, stockName):
+def generate(df, flg, stockCode, stockName, is_gen_single):
     Y_AXIS_NAMES = ['收盘价', '温度']
     if flg is 'stock_A':
         Y_AXIS_NAMES = ['前复权', '温度']
@@ -25,7 +25,8 @@ def generate(df, flg, stockCode, stockName):
     # line._option = getOption()
     file = 'output/abs_temp_line_' + flg + '_' + stockCode + '.html'
     line._option = option
-    line.render(path=file, template_name='template/temp_history.html', object_name='line')
+    if is_gen_single is True:
+        line.render(path=file, template_name='template/temp_history.html', object_name='line')
     return line
 
 
