@@ -3,9 +3,9 @@
 from pyecharts import Line
 import pandas as pd
 
-CHART_NAMES = ["收盘点位", "绝对温度", "相对温度"]
+CHART_NAMES = ["收盘点位", "绝对温度", "相对温度", "PB", "PE", "ROE", "S"]
 # Y_AXIS_NAMES = ['收盘价', '温度']
-LINE_COLOR = ['#000000', '#c23531', '#006400']
+LINE_COLOR = ['#000000', '#c23531', '#006400', '#006400', '#006400', '#006400', '#006400']
 
 
 def generate(df, flg, stockCode, stockName, is_gen_single):
@@ -16,6 +16,11 @@ def generate(df, flg, stockCode, stockName, is_gen_single):
     y_axises2 = []
     y_axises2.append(df['absolute_temp'])
     y_axises2.append(df['relative_temp'])
+    decimal = 3
+    y_axises2.append(df['pb'].round(decimals=decimal))
+    y_axises2.append(df['pe'].round(decimals=decimal))
+    y_axises2.append(df['roe'].round(decimals=decimal))
+    y_axises2.append(df['s'].round(decimals=decimal))
     y_axises = df["cp"]
 
     line = Line(width=1200, title=stockName)
@@ -151,9 +156,11 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2, Y_A
             "start": 90,
             "end": 100
         }],
-        'series': []
+        'series': [],
+        'legend': {
+            'data': []
+        }
     }
-
     for index, name in enumerate(names):
         line_width = 1.5
         if 0 == index:
@@ -164,6 +171,9 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2, Y_A
             yAxisIndex = 1
             data = y_axises2[index - 1]
 
+        if index > 2:
+            line_width = 0
+        show_temp = True
         series = {
             'type': 'line',
             'name': name,
@@ -174,10 +184,16 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2, Y_A
             "lineStyle": {
                 "width": line_width
             },
+            "showSymbol ": False,
             "color": LINE_COLOR[index]
         }
         option['series'].append(series)
+
+        if index < 3:
+            option['legend']['data'].append(name)
     return option
+
+
 
 
 # generate()
