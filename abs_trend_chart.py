@@ -141,7 +141,8 @@ def option_process(stockCode, stockName, names, x_axis, y_axises, y_axises2, Y_A
                     "show": True
                 },
                 'max': 100,
-                'interval': 10
+                'interval': 10,
+                'min': 0
                 # 'boundaryGap': [0, '100%'],
             }
         ],
