@@ -47,8 +47,28 @@ def generate(stockCode, stockName, temp_year_cnt, roe_year_cnt, is_gen_single=Tr
     calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt)
     print('计算绝对温度结束', stockCode)
 
+    # 获取作图数据 收盘价（前复权）pb pe roe s(v_pb)  十年国债 相对温度 绝对温度 温度平均值
+    sql_schema = """
+            SELECT t1.date, 
+                t1.cp, 
+                t1.pb, 
+                t1.pe, 
+                t1.absolute_temp, 
+                t1.relative_temp, 
+                (t1.absolute_temp + t1.relative_temp)/2 as avg_temp,
+                t1.s, 
+                t1.roe, 
+                guozhai.roe as guozhai
+            FROM {table_name} t1 
+            LEFT JOIN guozhai 
+            ON t1.date = guozhai.date
+            ORDER BY t1.date
+        """
+    sql = sql_schema.format(table_name=table_name + '_' + stockCode)
+    ndf = pd.read_sql_query(sql, conn)
+
     print('生成温度曲线图开始')
-    chart = abs_trend_chart.generate(df, flg, stockCode, stockName, is_gen_single)
+    chart = abs_trend_chart.generate(ndf, flg, stockCode, stockName, is_gen_single)
     print('生成温度曲线图结束')
     return chart
     # print('生成牛熊周期图开始')
