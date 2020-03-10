@@ -225,8 +225,5 @@ def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name, is_gen_single)
 
 # 是否生成每一个指数的html，默认生成
 is_gen_single = True
-stock_list = [
-    ('000300', '沪深300'),
-    ('HSI', '恒生指数')
-]
-generate_list(stock_list, 9, 5, '指数合并输出', is_gen_single)
+import abs_code_const as code
+generate_list(code.INDICE_LIST, 9, 5, '指数合并输出', is_gen_single)

@@ -209,8 +209,5 @@ def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name, is_gen_single)
 
 # 是否生成每一个指数的html，默认生成
 is_gen_single = True
-stock_list = [
-    ('601668', '中国建筑'),
-    ('600674', '川投能源')
-]
-generate_list(stock_list, 9, 5, '个股合并输出', is_gen_single)
+import abs_code_const as code
+generate_list(code.STOCK_LIST, 9, 5, '个股合并输出', is_gen_single)

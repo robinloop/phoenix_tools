@@ -3,9 +3,9 @@
 from pyecharts import Line
 import pandas as pd
 
-CHART_NAMES = ["收盘点位", "绝对温度", "相对温度", "PB", "PE", "ROE", "S"]
+CHART_NAMES = ["收盘点位", "绝对温度", "相对温度", "PB", "PE", "ROE", "V_PB"]
 # Y_AXIS_NAMES = ['收盘价', '温度']
-LINE_COLOR = ['#000000', '#c23531', '#006400', '#006400', '#006400', '#006400', '#006400']
+LINE_COLOR = ['#000000', '#c23531', '#006400', '#FCFCFC', '#FCFCFC', '#FCFCFC', '#FCFCFC']
 
 
 def generate(df, flg, stockCode, stockName, is_gen_single):
