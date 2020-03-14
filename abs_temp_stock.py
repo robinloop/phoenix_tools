@@ -223,17 +223,3 @@ def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name, is_gen_single)
     page.render(path=file)
 
 
-# 只支持A股指数，
-# 第一个参数是指数代码，
-# 第二个参数代表指数名称
-# 第三个参数9代表温度计算时间段9年，
-# 第四个参数5代表收益率T年（计算S）
-# generate('H00700', '港股', 9, 5)
-# generate('600674', '川投能源', 9, 5)
-# generate('601668', '中国建筑', 9, 5)
-
-#nerate_list(code.HOLD_STOCK_LIST, 5, 5, '持仓合并输出', is_gen_single)
-
-generate_list(code.CHECK_STOCK_LIST, 5, 5, '观察个股合并输出', code.IS_GEN_SINGLE)
-
-#generate_list(code.JJBK_STOCK_LIST, 5, 5, '基建板块合并输出', is_gen_single)

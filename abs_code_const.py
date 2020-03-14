@@ -8,7 +8,7 @@ GUOZHAI_RATE = 3
 IS_GEN_SINGLE = False
 
 # 股票代码
-STOCK_LIST = [
+CHECK_STOCK_LIST = [
     ('600019', '宝钢'),
     # ('600674', '川投能源')
 ]
