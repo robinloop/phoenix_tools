@@ -11,6 +11,7 @@ from scipy import stats
 import numpy as np
 import abs_trend_chart
 from pyecharts import Page
+import abs_code_const as code
 
 conn = sqlite.get_conn('data/' + constants.DATABASE)
 
@@ -119,11 +120,16 @@ def calc_absolute_tempreture(table_name, df, df_gz, stockCode, temp_year_cnt):
     print('计算绝对温度结束', stockCode)
     df.to_sql(table_name + '_' + stockCode, con=conn, if_exists='replace', index=False)
 
-    csv = 'data/' + table_name + '_' + stockCode + '.csv'
-    df.to_csv(csv, index=False, encoding='utf-8', decimal='.')
-    print('数据输出到csv文件：',  csv)
-    print(df.tail(1).ix[df.index.size - 1])
+    generate_csv(df, table_name + '_' + stockCode)
+    # print(df.tail(1).ix[df.index.size - 1])
     return df
+
+
+def generate_csv(df, file_name):
+    if code.IS_GEN_CSV:
+        csv = 'data/' + file_name + '.csv'
+        df.to_csv(csv, index=False, encoding='utf-8', decimal='.')
+        print('数据输出到csv文件：', csv)
 
 
 def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_year_cnt):
@@ -146,7 +152,7 @@ def calc_relative_tempreture(table_name, stockCode, df_gz, temp_year_cnt, roe_ye
         # 获取国债收益率
         df_gz_split = df_gz[df_gz['date'] <= df['date'][index]]
         r = df_gz_split['roe'][df_gz_split.index.values[0]]
-        r = r * 2 * 0.01
+        r = r * code.GUOZHAI_RATE * 0.01
         r1 = np.power(roe + 1, roe_year_cnt) - 1
         r2 = np.power(r + 1, roe_year_cnt) - 1
         s = r1/r2
@@ -238,12 +244,10 @@ def generate_list(stocks, temp_year_cnt, roe_year_cnt, file_name, is_gen_single)
 # 第二个参数代表指数名称
 # 第三个参数9代表温度计算时间段9年，
 # 第四个参数5代表收益率T年（计算S）
-# generate('HSI', '恒生指数', 9, 5)
-# generate('000300', '沪深300', 9, 5)
+generate('HSI', '恒生指数', 5, 5)
+generate('000300', '沪深300', 5, 5)
 # generate('HSCEI', '国企指数', 9, 5)
 
 
 # 是否生成每一个指数的html，默认生成
-is_gen_single = True
-import abs_code_const as code
-generate_list(code.INDICE_LIST, 9, 5, '指数合并输出', is_gen_single)
+#generate_list(code.INDICE_LIST, 5, 5, '指数合并输出', code.IS_GEN_SINGLE)

@@ -3,7 +3,7 @@
 from pyecharts import Line
 import pandas as pd
 
-CHART_NAMES = ["收盘点位", "绝对温度", "相对温度", "平均温度", "PB", "PE", "ROE", "V_PB", "十年国债收益"]
+CHART_NAMES = ["收盘点位", "绝对温度", "相对温度", "平均温度", "PB", "PE", "ROE", "V_PB", "10国债%"]
 # Y_AXIS_NAMES = ['收盘价', '温度']
 LINE_COLOR = ['#000000', '#c23531', '#006400',  '#FFD306', '#FCFCFC', '#FCFCFC', '#FCFCFC', '#FCFCFC', '#FCFCFC']
 
