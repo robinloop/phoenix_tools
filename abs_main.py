@@ -23,7 +23,7 @@ indice.generate('000300', '沪深300', 5, 5)
 
 indice.generate_list(const.INDICE_LIST, 5, 5, '指数合并输出', const.IS_GEN_SINGLE)
 
-# stock.generate_list(const.HOLD_STOCK_LIST, 5, 5, '持仓合并输出', is_gen_single)
+# stock.generate_list(const.HOLD_STOCK_LIST, 5, 5, '持仓合并输出', const.IS_GEN_SINGLE)
 
 stock.generate_list(const.CHECK_STOCK_LIST, 5, 5, '观察个股合并输出', const.IS_GEN_SINGLE)
 
