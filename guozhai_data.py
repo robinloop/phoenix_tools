@@ -60,33 +60,26 @@ def save_to_db(conn, date, value):
     sqlite.save(conn, sql=sql, data=result_data)
 
 
-conn = sqlite.get_conn('data/' + constants.DATABASE)
+def generate():
+    conn = sqlite.get_conn('data/' + constants.DATABASE)
+    df = pd.read_csv('data/guozhai.csv')
+    df.to_sql(table_name, con=conn, if_exists='replace', index=False)
+    sql = 'SELECT MAX(DATE) FROM ' + table_name + ' ORDER BY DATE DESC'
+    max_date = sqlite.fetchone(conn, sql, data=None)[0]
+    print('10年国债收益最新日期:', max_date)
+    date = max_date
+    if date_utils.check_today(date):
+        print('已经是最新数据，不需要处理')
+    else:
+        while True:
+            date = date_utils.tomorrow(date)
+            print('获取国债收益数据, 日期：', date)
+            get_guozhai_data(conn, date)
+            if date_utils.check_today(date):
+                break
+    sql = 'select * from guozhai order by date desc'
+    df = pd.read_sql_query(sql, conn)
+    df.to_csv('data/guozhai.csv', index=False, encoding='utf-8', decimal='.')
 
-df = pd.read_csv('data/guozhai.csv')
-df.to_sql(table_name, con=conn, if_exists='replace', index=False)
 
-sql = 'SELECT MAX(DATE) FROM ' + table_name + ' ORDER BY DATE DESC'
-max_date = sqlite.fetchone(conn, sql, data=None)[0]
-print('指数基本面最新日期:', max_date)
-
-# sql = 'SELECT date FROM indice_fundamental_a ' \
-#       'where code = 399975 and date > (select max(date) from guozhai) ' \
-#       'order by date desc'
-# results = sqlite.fetchall(conn, sql)
-# print(results)
-# 跟随股票。股票有新日期则获取新日期的国债收益数据
-# for result in results:
-date = max_date
-if date_utils.check_today(date):
-    print('已经是最新数据，不需要处理')
-else:
-    while True:
-        date = date_utils.tomorrow(date)
-        print('获取国债收益数据, 日期：', date)
-        get_guozhai_data(conn, date)
-        if date_utils.check_today(date):
-            break
-
-sql = 'select * from guozhai order by date desc'
-df = pd.read_sql_query(sql, conn)
-df.to_csv('data/guozhai.csv', index=False, encoding='utf-8', decimal='.')
+# generate()
