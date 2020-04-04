@@ -204,13 +204,13 @@ def download_indice_fundamental_data(url, table_name, stockCode):
     request_data = {
         "token": constants.TOKEN,
         "stockCodes": [stockCode],
-        "metrics": ["pb.weightedAvg", "pe_ttm.weightedAvg", "cp"],
+        "metricsList": ["pb.weightedAvg", "pe_ttm.weightedAvg", "cp"],
         "startDate": max_date
     }
     result = requests.post(url, json=request_data)
     result_data = []
 
-    if result.status_code == 200 and result.json()['msg'] == 'success':
+    if result.status_code == 200 and result.json()['message'] == 'success':
         for data in result.json()['data']:
             if 'pb' in data.keys() and 'cp' in data.keys():
                 if 'weightedAvg' in data['pb'].keys():

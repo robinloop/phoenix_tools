@@ -188,13 +188,13 @@ def download_indice_fundamental_data(url, table_name, stockCode, sp):
     request_data = {
         "token": constants.TOKEN,
         "stockCodes": [stockCode],
-        "metrics": ["pb", "pe_ttm", sp],
+        "metricsList": ["pb", "pe_ttm", sp],
         "startDate": max_date
     }
     result = requests.post(url, json=request_data)
     result_data = []
 
-    if result.status_code == 200 and result.json()['msg'] == 'success':
+    if result.status_code == 200 and result.json()['message'] == 'success':
         for data in result.json()['data']:
             split_date = data['date'].split('T')
             result_data.append(
