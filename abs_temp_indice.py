@@ -204,7 +204,7 @@ def download_indice_fundamental_data(url, table_name, stockCode):
     request_data = {
         "token": constants.TOKEN,
         "stockCodes": [stockCode],
-        "metricsList": ["pb.weightedAvg", "pe_ttm.weightedAvg", "cp"],
+        "metricsList": ["pb.mcw", "pe_ttm.mcw", "cp"],
         "startDate": max_date
     }
     result = requests.post(url, json=request_data)
@@ -213,14 +213,14 @@ def download_indice_fundamental_data(url, table_name, stockCode):
     if result.status_code == 200 and result.json()['message'] == 'success':
         for data in result.json()['data']:
             if 'pb' in data.keys() and 'cp' in data.keys():
-                if 'weightedAvg' in data['pb'].keys():
+                if 'mcw' in data['pb'].keys():
                     split_date = data['date'].split('T')
                     result_data.append(
                         (stockCode,
                          split_date[0],
                          data['cp'],
-                         data['pb']['weightedAvg'],
-                         data['pe_ttm']['weightedAvg'])
+                         data['pb']['mcw'],
+                         data['pe_ttm']['mcw'])
                     )
         sql = 'INSERT INTO ' + table_name + ' (code, date, cp, pb, pe) VALUES (?, ?, ?, ?, ?)'
         sqlite.save(conn, sql=sql, data=result_data)
