@@ -38,7 +38,10 @@ def get_guozhai_data(conn, date):
           '&&locale=zh_CN' \
           '&&workTimes=' + date
 
-    result = requests.post(url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'
+    }
+    result = requests.post(url, headers=headers)
     if result.status_code == 200:
         if result.text is '':
             print('This date has no data, please check date!',  date)
@@ -83,3 +86,19 @@ def generate():
 
 
 # generate()
+# import http.client
+# import mimetypes
+# conn = http.client.HTTPSConnection("yield.chinabond.com.cn")
+# payload = ''
+# headers = {
+#   'Cookie': 'JSESSIONID=0000AIPo9fHLMDkomuyaM_JJ16q:-1'
+# }
+# conn.request("POST", "/cbweb-mn/yc/searchYc?xyzSelect=txy&&dxbj=0&&qxll=0,&&yqqxN=N&&yqqxK=K&&ycDefIds=2c9081e50a2f9606010a3068cae70001,&&wrjxCBFlag=0&&locale=zh_CN&&workTimes=2020-05-08", payload, headers)
+# res = conn.getresponse()
+# data = res.read()
+# print(data.decode("utf-8"))
+#
+# headers = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36'}
+# url = "http://yield.chinabond.com.cn/cbweb-mn/yc/searchYc?xyzSelect=txy&&dxbj=0&&qxll=0,&&yqqxN=N&&yqqxK=K&&ycDefIds=2c9081e50a2f9606010a3068cae70001,&&wrjxCBFlag=0&&locale=zh_CN&&workTimes=2020-05-07"
+# rr = requests.post(url, headers=headers)
+# print(rr.text)
