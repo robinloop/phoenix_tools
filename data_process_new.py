@@ -141,13 +141,13 @@ def download_data(stockCode, startDate):
     request_data = {
         "token": TOKEN,
         "stockCodes": [stockCode],
-        "metrics": ["pb.median", "pe_ttm.median", "cp"],
+        "metricsList": ["pb.median", "pe_ttm.median", "cp"],
         "startDate": startDate
     }
     result = requests.post(url, json=request_data)
     result_data = []
 
-    if result.status_code == 200 and result.json()['msg'] == 'success':
+    if result.status_code == 200 and result.json()['message'] == 'success':
         for data in result.json()['data']:
             split_date = data['date'].split('T')
             pb_data = {

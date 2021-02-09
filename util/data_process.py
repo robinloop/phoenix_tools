@@ -54,7 +54,7 @@ def data_download_stock(stock, url):
     request_data = {
         "token": constants.TOKEN,
         "stockCodes": [stock],
-        "metrics": ["pb", "pe_ttm", "sp"],
+        "metricsList": ["pb", "pe_ttm", "sp"],
         "startDate": "2000-01-01"
     }
     result = requests.post(url, json=request_data)
@@ -62,7 +62,7 @@ def data_download_stock(stock, url):
     pes = []
     cps = []
     date = []
-    if result.status_code == 200 and result.json()['msg'] == 'success':
+    if result.status_code == 200 and result.json()['message'] == 'success':
         for data in result.json()['data']:
             if 'sp' in data.keys():
                 cp = data['sp']

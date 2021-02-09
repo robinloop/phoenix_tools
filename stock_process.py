@@ -70,7 +70,7 @@ def download(stock):
 
     stock_name = None
     result = requests.post(url_info, json=request_data)
-    if result.status_code == 200 and result.json()['msg'] == 'success':
+    if result.status_code == 200 and result.json()['message'] == 'success':
         for data in result.json()['data']:
             if 'name' in data.keys():
                 stock_name = data['name']
