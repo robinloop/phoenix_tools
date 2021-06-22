@@ -53,12 +53,12 @@ URL_INDICE_FUNDAMENTAL = BASE_URL + "/api/a/index/fundamental"
 # H股指数基本面
 URL_H_INDICE_FUNDAMENTAL = BASE_URL + "/api/h/index/fundamental"
 # A股个股
-URL_A = BASE_URL + "/api/a/stock"
-URL_A_FUNDAMENTAL = BASE_URL + "/api/a/stock/fundamental/non_financial"
+URL_A = BASE_URL + "/api/a/company"
+URL_A_FUNDAMENTAL = BASE_URL + "/api/a/company/fundamental/non_financial"
 
 # H股个股
-URL_H = BASE_URL + "/api/h/stock"
-URL_H_FUNDAMENTAL = BASE_URL + "/api/h/stock/fundamental"
+URL_H = BASE_URL + "/api/h/company"
+URL_H_FUNDAMENTAL = BASE_URL + "/api/h/company/fundamental/non_financial"
 
 TOKEN = "8ec3e830-0fe7-4734-844c-e23d6ea119e2"
 
