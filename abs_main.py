@@ -32,9 +32,14 @@ stock.generate_list(const.HOLD_STOCK_LIST, 5, 5, '持仓合并输出', const.IS_
 
 stock.generate_list(const.LEADING_STOCK_LIST, 5, 5, '龙头企业合并输出', const.IS_GEN_SINGLE)
 
-stock.generate_list(const.GZDMBK_STOCK_LIST, 5, 5, '跟踪代买合并输出', const.IS_GEN_SINGLE)
+stock.generate_list(const.GZDMBK_STOCK_LIST, 5, 5, '跟踪待买合并输出', const.IS_GEN_SINGLE)
 
 stock.generate_list(const.CHECK_STOCK_LIST, 5, 5, '观察个股合并输出', const.IS_GEN_SINGLE)
 
 stock.generate_list(const.JJBK_STOCK_LIST, 5, 5, '基建板块合并输出', const.IS_GEN_SINGLE)
+
+stock.generate_list(const.QNBK_STOCK_LIST, 5, 5, '氢能板块合并输出', const.IS_GEN_SINGLE)
+
+stock.generate_list(const.ZJBK_STOCK_LIST, 5, 5, '猪鸡板块合并输出', const.IS_GEN_SINGLE)
+
 
