@@ -1,7 +1,0 @@
-ReferenceError: Can't find variable: echarts
-
-  file:///D:%5Cdev%5CJetBrains%5Cpycharm_work%5Cphoenix_tools%5Coutput%5Ctemp_line.html:17 in global code
-TypeError: null is not an object (evaluating 'element.innerHTML')
-
-  undefined:1
-null
